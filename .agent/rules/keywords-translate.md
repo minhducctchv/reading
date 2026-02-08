@@ -2,5 +2,5 @@
 trigger: manual
 ---
 
-Translate and replace all vocabularies in the document with:
+Translate and replace as many vocabularies as possible in the document with:
 <Meaning word="vocabulary" meaning="its Vietnamese meaning" />
