@@ -15,7 +15,7 @@ const navbar = (
     // ... Your additional navbar options
     />
 )
-const footer = <Footer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Reading {new Date().getFullYear()} © MDT Nextra.</Footer>
+const footer = <Footer style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>Reading 08/02/2026 © MDT Nextra.</Footer>
 
 export default async function RootLayout({ children }) {
     return (
