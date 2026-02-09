@@ -11,7 +11,7 @@ export function Meaning({ word, meaning }) {
             <Tooltip.Root open={open} onOpenChange={setOpen}>
                 <Tooltip.Trigger asChild>
                     <span
-                        className="cursor-pointer bg-green-100 dark:bg-yellow-900/30 rounded px-0.5"
+                        className="cursor-pointer bg-green-50 dark:bg-yellow-900/15 rounded px-0.5"
                         onClick={() => setOpen((prev) => !prev)}
                     >
                         {word}
