@@ -3,6 +3,7 @@ import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import 'nextra-theme-docs/style.css'
 import '../global.css'
+import { VocabularyHighlighter } from '../components/VocabularyHighlighter'
 
 export const metadata = {
     // Define your metadata here
@@ -42,6 +43,7 @@ export default async function RootLayout({ children }) {
                 >
                     {children}
                 </Layout>
+                <VocabularyHighlighter />
             </body>
         </html>
     )
