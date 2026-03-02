@@ -7,6 +7,16 @@ import { VocabularyPopup } from './VocabularyPopup'
 const HIGHLIGHT_CLASS = 'vocab-highlight'
 const HIGHLIGHT_ATTR = 'data-vocab-id'
 
+// Normalize: lowercase, trim, bỏ ký tự đặc biệt (giữ lại chữ cái, số, khoảng trắng)
+function normalizeText(str) {
+    return str
+        .trim()
+        .toLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, '') // bỏ ký tự không phải chữ/số/khoảng trắng
+        .replace(/\s+/g, ' ')             // chuẩn hóa khoảng trắng
+        .trim()
+}
+
 export function VocabularyHighlighter() {
     const pathname = usePathname()
     const [vocabs, setVocabs] = useState([]) // list of {_id, text, ...}
@@ -79,58 +89,73 @@ export function VocabularyHighlighter() {
             textNodes.push(node)
         }
 
-        // Build map: lowercase text → vocab
-        const vocabMap = {}
-        vocabList.forEach(v => {
-            vocabMap[v.text.toLowerCase()] = v
-        })
+        // Build map: normalizedText → { vocab, originalLength }
+        // Dùng regex để match case-insensitive + ignore special chars
+        const vocabEntries = vocabList.map(v => {
+            const normalized = normalizeText(v.text)
+            // Escape regex special chars trong normalized text, rồi cho phép \W* giữa các từ
+            const escapedParts = normalized.split(/\s+/).map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+            // Pattern: các phần từ ngăn cách bởi ký tự đặc biệt / khoảng trắng tùy ý
+            const pattern = escapedParts.join('[^\\p{L}\\p{N}]*')
+            const regex = new RegExp(pattern, 'iu')
+            return { vocab: v, normalized, regex }
+        }).filter(e => e.normalized.length > 0)
 
-        // Sort by length desc để match longer phrases first
-        const sortedTexts = Object.keys(vocabMap).sort((a, b) => b.length - a.length)
+        // Sort by normalized length desc để match longer phrases first
+        vocabEntries.sort((a, b) => b.normalized.length - a.normalized.length)
 
         textNodes.forEach(textNode => {
             const original = textNode.textContent
             if (!original.trim()) return
 
             let remaining = original
-            let remainingIndex = 0
             const fragment = document.createDocumentFragment()
             let didMatch = false
 
             while (remaining.length > 0) {
-                let matched = false
-                const lowerRemaining = remaining.toLowerCase()
+                // Tìm match sớm nhất (earliest index) trong tất cả vocabs.
+                // Nếu cùng index, ưu tiên match dài hơn.
+                let bestMatch = null // { idx, matchLen, vocab }
 
-                for (const searchText of sortedTexts) {
-                    const idx = lowerRemaining.indexOf(searchText)
-                    if (idx === -1) continue
+                for (const { vocab, regex } of vocabEntries) {
+                    const m = regex.exec(remaining)
+                    if (!m) continue
 
-                    const vocab = vocabMap[searchText]
+                    const idx = m.index
+                    const matchLen = m[0].length
 
-                    // Text trước match
-                    if (idx > 0) {
-                        fragment.appendChild(document.createTextNode(remaining.slice(0, idx)))
+                    if (
+                        bestMatch === null ||
+                        idx < bestMatch.idx ||
+                        (idx === bestMatch.idx && matchLen > bestMatch.matchLen)
+                    ) {
+                        bestMatch = { idx, matchLen, vocab }
                     }
-
-                    // Span highlight
-                    const span = document.createElement('span')
-                    span.className = HIGHLIGHT_CLASS
-                    span.setAttribute(HIGHLIGHT_ATTR, vocab._id)
-                    span.textContent = remaining.slice(idx, idx + searchText.length)
-                    span.title = vocab.meaning?.join(' / ') ?? ''
-                    fragment.appendChild(span)
-                    highlightedRef.current.push(span)
-
-                    remaining = remaining.slice(idx + searchText.length)
-                    matched = true
-                    didMatch = true
-                    break
                 }
 
-                if (!matched) {
+                if (!bestMatch) {
                     fragment.appendChild(document.createTextNode(remaining))
                     break
                 }
+
+                const { idx, matchLen, vocab } = bestMatch
+
+                // Text trước match
+                if (idx > 0) {
+                    fragment.appendChild(document.createTextNode(remaining.slice(0, idx)))
+                }
+
+                // Span highlight – giữ nguyên text gốc
+                const span = document.createElement('span')
+                span.className = HIGHLIGHT_CLASS
+                span.setAttribute(HIGHLIGHT_ATTR, vocab._id)
+                span.textContent = remaining.slice(idx, idx + matchLen)
+                span.title = vocab.meaning?.join(' / ') ?? ''
+                fragment.appendChild(span)
+                highlightedRef.current.push(span)
+
+                remaining = remaining.slice(idx + matchLen)
+                didMatch = true
             }
 
             if (didMatch && textNode.parentNode) {
