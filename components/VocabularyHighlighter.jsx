@@ -7,13 +7,15 @@ import { VocabularyPopup } from './VocabularyPopup'
 const HIGHLIGHT_CLASS = 'vocab-highlight'
 const HIGHLIGHT_ATTR = 'data-vocab-id'
 
-// Normalize: lowercase, trim, bỏ ký tự đặc biệt (giữ lại chữ cái, số, khoảng trắng)
+// Đồng bộ với normalizeText() trong vocabularyService.js:
+// chỉ strip ký tự markdown syntax, giữ lại '-', '.', "'" ... có trong vocabulary
+const MARKDOWN_STRIP_RE = /[#*_`~\[\]()=>|\\]/g
+
 function normalizeText(str) {
     return str
-        .trim()
         .toLowerCase()
-        .replace(/[^\p{L}\p{N}\s]/gu, '') // bỏ ký tự không phải chữ/số/khoảng trắng
-        .replace(/\s+/g, ' ')             // chuẩn hóa khoảng trắng
+        .replace(MARKDOWN_STRIP_RE, ' ')
+        .replace(/\s+/g, ' ')
         .trim()
 }
 
