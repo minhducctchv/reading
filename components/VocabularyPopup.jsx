@@ -109,22 +109,13 @@ export function VocabularyPopup({ vocab, selectedText, position, onClose, onSave
         }
     }
 
-    // Tính toán vị trí popup sao cho không bị tràn ra ngoài viewport
-    const popupWidth = 320
-    const popupHeight = 380
-    let left = position.x
-    let top = position.y + 12
-    if (left + popupWidth > window.innerWidth - 8) left = window.innerWidth - popupWidth - 8
-    if (left < 8) left = 8
-    if (top + popupHeight > window.innerHeight - 8) top = position.y - popupHeight - 8
-    if (top < 8) top = 8
-
     return (
-        <div className="vocab-popup-backdrop">
+        <div className="vocab-popup-backdrop" onClick={(e) => {
+            if (e.target === e.currentTarget) onClose()
+        }}>
             <div
                 ref={popupRef}
                 className="vocab-popup"
-                style={{ left, top }}
             >
                 <div className="vocab-popup-header">
                     <span className="vocab-popup-title">
