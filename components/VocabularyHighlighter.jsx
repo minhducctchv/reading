@@ -99,7 +99,10 @@ export function VocabularyHighlighter() {
             const escapedParts = normalized.split(/\s+/).map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
             // Pattern: các phần từ ngăn cách bởi ký tự đặc biệt / khoảng trắng tùy ý
             const pattern = escapedParts.join('[^\\p{L}\\p{N}]*')
-            const regex = new RegExp(pattern, 'iu')
+            // Word boundary: không match khi vocab chỉ là 1 phần của word
+            // (?<!\p{L}|\p{N}) = trước match không phải letter/number
+            // (?!\p{L}|\p{N})  = sau match không phải letter/number
+            const regex = new RegExp(`(?<!\\p{L}|\\p{N})${pattern}(?!\\p{L}|\\p{N})`, 'iu')
             return { vocab: v, normalized, regex }
         }).filter(e => e.normalized.length > 0)
 
