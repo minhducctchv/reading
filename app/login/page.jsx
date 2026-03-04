@@ -1,13 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
     const [password, setPassword] = useState('')
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
-    const router = useRouter()
 
     async function handleSubmit(e) {
         e.preventDefault()
@@ -24,7 +22,7 @@ export default function LoginPage() {
         setLoading(false)
 
         if (data.success) {
-            router.replace('/')
+            window.location.href = '/'
         } else {
             setError(data.message || 'Sai mật khẩu!')
             setPassword('')
