@@ -21,6 +21,7 @@ export function VocabularyPopup({ vocab, selectedText, position, onClose, onSave
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
     const popupRef = useRef(null)
+    const isMobile = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
 
     // Sync khi vocab thay đổi (e.g. click từ highlight khác nhau)
     useEffect(() => {
@@ -152,7 +153,7 @@ export function VocabularyPopup({ vocab, selectedText, position, onClose, onSave
                             placeholder="One meaning per line (Shift+Enter for new line)"
                             rows={3}
                             required
-                            autoFocus
+                            autoFocus={!isMobile}
                         />
                     </div>
 
