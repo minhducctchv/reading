@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { VocabularyPopup } from './VocabularyPopup'
+import { getApiPassword } from '../lib/clientAuth'
 
 const HIGHLIGHT_CLASS = 'vocab-highlight'
 const HIGHLIGHT_ATTR = 'data-vocab-id'
@@ -33,7 +34,7 @@ export function VocabularyHighlighter() {
                 const pageText = document.body.innerText
                 const res = await fetch('/api/vocabulary/search', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'x-api-password': process.env.NEXT_PUBLIC_PASSWORD },
+                    headers: { 'Content-Type': 'application/json', 'x-api-password': getApiPassword() },
                     body: JSON.stringify({ text: pageText }),
                 })
                 if (!res.ok) return
