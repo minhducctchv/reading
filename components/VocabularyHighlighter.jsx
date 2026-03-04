@@ -33,7 +33,7 @@ export function VocabularyHighlighter() {
                 const pageText = document.body.innerText
                 const res = await fetch('/api/vocabulary/search', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'x-api-password': process.env.NEXT_PUBLIC_PASSWORD },
                     body: JSON.stringify({ text: pageText }),
                 })
                 if (!res.ok) return

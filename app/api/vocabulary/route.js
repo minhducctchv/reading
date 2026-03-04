@@ -4,10 +4,14 @@ import {
   findVocabulariesByText,
   updateVocabulary,
 } from "@/lib/vocabularyService";
+import { checkApiPassword } from "@/lib/apiAuth";
 import { NextResponse } from "next/server";
 
 // GET /api/vocabulary?text=hello  -> findVocabulariesByText (limit 10)
 export async function GET(request) {
+  const authError = checkApiPassword(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const text = searchParams.get("text");
@@ -28,6 +32,9 @@ export async function GET(request) {
 
 // POST /api/vocabulary   body: { originalWord?, text, pronunciation?, meaning[] }
 export async function POST(request) {
+  const authError = checkApiPassword(request);
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const item = await addVocabulary(body);
@@ -39,6 +46,9 @@ export async function POST(request) {
 
 // PUT /api/vocabulary?id=xxx   body: { ...fields }
 export async function PUT(request) {
+  const authError = checkApiPassword(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");
@@ -58,6 +68,9 @@ export async function PUT(request) {
 
 // DELETE /api/vocabulary?id=xxx
 export async function DELETE(request) {
+  const authError = checkApiPassword(request);
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const id = searchParams.get("id");

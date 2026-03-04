@@ -73,13 +73,13 @@ export function VocabularyPopup({ vocab, selectedText, position, onClose, onSave
             if (vocab?._id) {
                 res = await fetch(`/api/vocabulary?id=${vocab._id}`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'x-api-password': process.env.NEXT_PUBLIC_PASSWORD },
                     body: JSON.stringify(body),
                 })
             } else {
                 res = await fetch('/api/vocabulary', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', 'x-api-password': process.env.NEXT_PUBLIC_PASSWORD },
                     body: JSON.stringify(body),
                 })
             }
@@ -98,7 +98,7 @@ export function VocabularyPopup({ vocab, selectedText, position, onClose, onSave
         if (!confirm(`Delete "${vocab.text}"?`)) return
         setLoading(true)
         try {
-            const res = await fetch(`/api/vocabulary?id=${vocab._id}`, { method: 'DELETE' })
+            const res = await fetch(`/api/vocabulary?id=${vocab._id}`, { method: 'DELETE', headers: { 'x-api-password': process.env.NEXT_PUBLIC_PASSWORD } })
             const json = await res.json()
             if (!res.ok) throw new Error(json.error || 'Failed')
             onDeleted(vocab._id)
