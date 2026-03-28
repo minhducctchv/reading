@@ -1,0 +1,21 @@
+# 1.4 Project Structure
+
+A Gradle project uses special files to organize its settings. These files tell Gradle how to build your software. Understanding this structure is the first step to mastering Gradle.
+
+## build.gradle / build.gradle.kts
+
+This file is the main build script. It contains the instructions for building your project. You write tasks and declare dependencies here. Dependencies are external libraries your code needs to work.
+
+You can write this script in two languages. If you use Groovy, name the file `build.gradle`. If you use Kotlin, name it `build.gradle.kts`.
+
+## settings.gradle
+
+This file helps Gradle find all parts of your project. It is very important for large projects. A large project often has many smaller projects inside it. These are called subprojects or modules.
+
+The `settings.gradle` file lists all these subprojects. This tells Gradle to include them when building. For Kotlin, the file is named `settings.gradle.kts`.
+
+## gradle.properties
+
+This is a configuration file. It stores simple key-value pairs. You can use this file for two main things.
+
+First, you can configure how Gradle runs. For example, you can give Gradle more memory. Second, you can store project variables. For example, you can define library versions here and use them in your build scripts.

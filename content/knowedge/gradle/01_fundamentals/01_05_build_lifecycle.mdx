@@ -1,0 +1,29 @@
+# 1.5 Build Lifecycle
+
+When you run a Gradle build, it does not happen all at once. Instead, Gradle works in three clear steps. These steps make up the **Build Lifecycle**. Understanding these steps helps you know how Gradle runs your build scripts.
+
+The three steps are: Initialization, Configuration, and Execution.
+
+## Initialization
+
+The first step is **Initialization**. In this step, Gradle decides which projects will take part in the build.
+
+Gradle looks for the `settings.gradle` file. It uses this file to find all the projects in your build. This is very important for multi-project builds.
+
+After reading the settings file, Gradle creates a `Project` object for every project. This object holds all the information about that project.
+
+## Configuration
+
+The second step is **Configuration**. Now, Gradle evaluates the build scripts.
+
+Gradle reads the `build.gradle` file for every project. It runs the code inside these files. This sets up the project and defines its tasks.
+
+During this step, Gradle creates a "task graph". This graph shows all the tasks and how they depend on each other. However, Gradle does not run any tasks yet. It only prepares them.
+
+## Execution
+
+The final step is **Execution**. This is when the actual work happens.
+
+Gradle looks at the task graph it created. It decides which tasks need to run based on your command. For example, if you ran `gradle build`, it finds the `build` task and all the tasks it depends on.
+
+Then, Gradle runs these tasks in the correct order. It compiles code, runs tests, and creates your final files.
