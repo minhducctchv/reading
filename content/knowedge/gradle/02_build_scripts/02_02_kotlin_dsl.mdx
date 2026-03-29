@@ -1,1 +1,54 @@
 # 2.2 Kotlin DSL (.kts)
+
+## What is Kotlin DSL?
+Kotlin is a modern programming language. 
+DSL stands for Domain Specific Language. 
+Gradle uses Kotlin DSL for files named `build.gradle.kts`. 
+It is an alternative to the traditional Groovy DSL.
+
+## Why use Kotlin in Gradle?
+Kotlin is designed to be safe and clear. 
+It helps you write clean code. 
+It is very popular among Android and Java developers. 
+It gives you excellent support in modern code editors.
+
+## Basic Syntax
+In a Kotlin `build.gradle.kts` file, you write instructions to configure your project.
+
+### Variables
+You can create variables using the `val` keyword for read-only values or `var` for values that change.
+```kotlin
+val myName = "Gradle User"
+```
+
+### Methods and Blocks
+Gradle uses blocks to group configurations together. For example, the `plugins` block.
+```kotlin
+plugins {
+    id("java")
+}
+```
+In Kotlin, you must use parentheses `()` for method calls. 
+You must also use double quotes `""` for strings.
+
+### Tasks
+Tasks are the basic units of work in Gradle. 
+You can create a task very easily using Kotlin DSL.
+```kotlin
+tasks.register("hello") {
+    doLast {
+        println("Hello from Kotlin DSL!")
+    }
+}
+```
+This script creates a task named `hello`. When you run this task, it prints a message.
+
+## Advantages of Kotlin DSL
+- It provides great tool support in editors like IntelliJ IDEA and Android Studio. 
+- The editor can give you auto-completion and show errors as you type.
+- It is type-safe. This means the compiler checks your code to prevent mistakes before you run it.
+
+## Disadvantages
+- Build speeds can be slightly slower compared to Groovy, especially on the first run.
+- You have to write slightly more code because it requires strict syntax like parentheses `()` and double quotes `""`.
+- Older documentation and examples on the internet might use Groovy instead of Kotlin.

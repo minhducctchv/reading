@@ -1,1 +1,52 @@
 # 2.1 Groovy DSL
+
+## What is Groovy DSL?
+Groovy is a programming language. 
+DSL stands for Domain Specific Language. 
+In Gradle, a DSL is a special type of language used to write build scripts. 
+Gradle uses Groovy DSL by default for files named `build.gradle`.
+
+## Why use Groovy in Gradle?
+Groovy is very flexible. 
+It allows you to write build logic easily. 
+It is naturally built for Java. 
+It uses less code than Java to do the same things.
+
+## Basic Syntax
+In a Groovy `build.gradle` file, you write instructions to configure your project.
+
+### Variables
+You can create variables using the `def` keyword.
+```groovy
+def myName = "Gradle User"
+```
+
+### Methods and Blocks
+Gradle uses blocks to group configurations together. For example, the `plugins` block.
+```groovy
+plugins {
+    id 'java'
+}
+```
+In Groovy, you do not always need parentheses `()` or semicolons `;` at the end of a line.
+
+### Tasks
+Tasks are the basic units of work in Gradle. 
+You can create a task very easily using Groovy DSL.
+```groovy
+tasks.register('hello') {
+    doLast {
+        println 'Hello from Groovy DSL!'
+    }
+}
+```
+This script creates a task named `hello`. When you run this task, it prints a message.
+
+## Advantages of Groovy DSL
+- It is the traditional language for Gradle. This means you can find many examples online.
+- It is very easy to read and understand.
+- It is highly customizable.
+
+## Disadvantages
+- Tool support (like typing suggestions in your code editor) is not as strong as Kotlin DSL.
+- It catches fewer errors while you are typing compared to Kotlin DSL.
