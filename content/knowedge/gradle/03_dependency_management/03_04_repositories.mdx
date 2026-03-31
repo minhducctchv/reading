@@ -1,7 +1,68 @@
 # 3.4 Repositories
 
+Gradle needs a place to find your project dependencies. These places are called repositories. A repository is a collection of software packages. You must tell Gradle which repositories to use in your build script.
+
 ## Maven Central
+
+Maven Central is the most popular repository for Java and Kotlin projects. It contains millions of open-source packages. You can add it to your project using the `mavenCentral()` method.
+
+```kotlin
+repositories {
+    mavenCentral()
+}
+```
+
+This is the standard choice for most developers. It is safe, reliable, and completely free to use.
 
 ## JCenter (deprecated)
 
+JCenter was another very popular repository in the past. However, it is now deprecated. This means it is no longer actively supported or updated. You should avoid using JCenter in any new projects.
+
+```kotlin
+repositories {
+    // You should remove this from your projects
+    jcenter() 
+}
+```
+
+If you maintain an older project that still uses JCenter, you should migrate it to Maven Central.
+
 ## Custom repositories
+
+Sometimes, your project needs private packages. Other times, you need packages that are not available in public repositories. In these cases, you can set up custom repositories. A custom repository can be a remote server or a local folder.
+
+You can add a custom remote Maven repository by providing its internet address (URL).
+
+```kotlin
+repositories {
+    maven {
+        url = uri("https://repo.mycompany.com/maven2")
+    }
+}
+```
+
+Many custom repositories require you to log in. You can easily provide your username and password for access.
+
+```kotlin
+repositories {
+    maven {
+        url = uri("https://repo.mycompany.com/maven2")
+        credentials {
+            username = "myUser"
+            password = "myPassword"
+        }
+    }
+}
+```
+
+You can also use a simple folder on your computer as a repository. This is very useful when you want to quickly add a local file as a dependency.
+
+```kotlin
+repositories {
+    flatDir {
+        dirs("libs")
+    }
+}
+```
+
+Custom repositories give you complete control over how and where your project gets its dependencies.

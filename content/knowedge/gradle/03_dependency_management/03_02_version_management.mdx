@@ -1,7 +1,55 @@
 # 3.2 Version Management
 
-## fixed version
+Version management is the way you control which versions of libraries your project uses. Gradle offers different ways to set these versions.
 
-## dynamic version
+## Fixed Version
 
-## version catalog (libs.versions.toml)
+A fixed version specifies one exact version of a library. The build uses this exact version every time. This approach guarantees that your build will be identical across different computers. It is stable and predictable.
+
+To use a fixed version, you write the exact version number in your configuration.
+
+**Example:**
+```kotlin
+dependencies {
+    implementation("com.google.guava:guava:31.1-jre")
+}
+```
+
+## Dynamic Version
+
+A dynamic version lets Gradle pick the library version automatically. You can define a range or ask for the latest version. This keeps your project up-to-date with new features and bug fixes.
+
+However, dynamic versions can cause problems. If a new version has a bug, your build might break suddenly. Therefore, you must use dynamic versions carefully.
+
+**Example:**
+```kotlin
+dependencies {
+    // Uses the latest 31.x version
+    implementation("com.google.guava:guava:31.+")
+    
+    // Uses the absolute latest release
+    implementation("com.google.guava:guava:latest.release")
+}
+```
+
+## Version Catalog (libs.versions.toml)
+
+A version catalog is a modern and clean way to manage versions. You define all your dependencies and their versions in one central file. This file is usually named `gradle/libs.versions.toml`.
+
+This central file makes it easy to share versions across multiple modules in your project. If you need to update a library, you only change it in one place. It also provides text editor support with auto-completion.
+
+**Example of `libs.versions.toml`:**
+```toml
+[versions]
+guava = "31.1-jre"
+
+[libraries]
+google-guava = { module = "com.google.guava:guava", version.ref = "guava" }
+```
+
+**Example of using the catalog:**
+```kotlin
+dependencies {
+    implementation(libs.google.guava)
+}
+```

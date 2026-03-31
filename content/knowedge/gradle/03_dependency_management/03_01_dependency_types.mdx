@@ -1,11 +1,33 @@
 # 3.1 Dependency Types
 
+Dependencies are external libraries that your project needs to work. Gradle provides different types of dependencies. They control how libraries are used during building and running your project.
+
 ## implementation
+
+This is the most common dependency type. It adds a library to your project for compilation and running. 
+
+However, it hides the library from other projects that use your project. This means less code to check. This makes the compilation faster. You should use `implementation` by default.
 
 ## api
 
+This type is similar to `implementation`. It also adds a library to your project. 
+
+The difference is that it shares the library with other projects that depend on your project. You should use `api` only when other projects must use the library directly.
+
 ## compileOnly
+
+This type adds a library only when compiling the code. It does not add the library when running the code. 
+
+This is useful when the environment provides the library later. For example, a web server provides the Servlet API. Your project only needs it to compile.
 
 ## runtimeOnly
 
+This type adds a library only when running the code. It does not add the library when compiling the code. 
+
+This is useful for libraries that work behind the scenes. For example, you need a database driver to connect to a database. You do not write code directly for the driver.
+
 ## testImplementation
+
+This type adds a library only for your tests. It helps you compile and run your test code.
+
+The library is completely hidden from your main application code. This keeps your main project clean. You use this for testing tools like JUnit or Mockito.
