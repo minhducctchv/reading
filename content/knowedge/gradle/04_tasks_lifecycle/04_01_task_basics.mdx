@@ -1,5 +1,22 @@
 # 4.1 Task Basics
 
+In Gradle, a task is a basic unit of work. It performs a specific action. For example, a task can compile code or create a ZIP file.
+
+Every Gradle build contains one or more tasks. You define these tasks in your build script.
+
 ## doFirst / doLast
 
+A task has a list of actions. You can add new actions to this list using two methods: `doFirst` and `doLast`.
+
+*   **`doFirst`**: This method adds an action to the start of the list. The action will run before the other parts of the task.
+*   **`doLast`**: This method adds an action to the end of the list. The action will run after the other parts of the task.
+
+These methods are very useful. They let you step into an existing task and add your own custom work.
+
 ## dependsOn
+
+Often, one task needs another task to finish first. You can connect tasks together using `dependsOn`.
+
+If Task A depends on Task B, Gradle will always run Task B before it runs Task A.
+
+This creates a clear order for your work. For example, a "test" task must depend on a "compile" task. You cannot run tests if the code is not compiled. The `dependsOn` keyword helps you manage these rules easily.

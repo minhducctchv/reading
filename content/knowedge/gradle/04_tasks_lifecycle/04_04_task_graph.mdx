@@ -1,3 +1,17 @@
 # 4.4 Task Graph
 
-## execution order
+Gradle uses a Task Graph to plan a build. The graph is built before any task runs.
+
+A Task Graph is a Directed Acyclic Graph (DAG). It contains all the tasks needed for the build. It also shows the dependencies between these tasks.
+
+You can view the graph as a roadmap. Gradle reads this roadmap to know what to do.
+
+## Execution Order
+
+The task graph decides the execution order. Gradle follows the dependencies to find this order.
+
+Tasks with no dependencies can start immediately. A task must wait for its dependent tasks. It only runs after they finish successfully.
+
+Gradle guarantees that each task runs only once per build. If multiple tasks depend on the same task, that shared task still runs only once.
+
+Sometimes, tasks do not depend on each other. In this case, Gradle can run them at the same time. This is called parallel execution. It makes the build faster.
