@@ -1,0 +1,33 @@
+# 3.1 Dependency Types
+
+Dependency là các external library mà project của bạn cần để hoạt động. Gradle cung cấp các loại dependency khác nhau. Chúng kiểm soát cách library được dùng trong quá trình build và runtime.
+
+## implementation
+
+Đây là loại dependency phổ biến nhất. Nó thêm library vào project để compile và chạy.
+
+Tuy nhiên, nó ẩn library khỏi các project khác phụ thuộc vào project của bạn. Điều này giúp giảm lượng code cần kiểm tra và làm cho quá trình compile nhanh hơn. Bạn nên dùng `implementation` theo mặc định.
+
+## api
+
+Loại này tương tự `implementation`. Nó cũng thêm library vào project của bạn.
+
+Điểm khác biệt là nó chia sẻ library với các project khác phụ thuộc vào project của bạn. Chỉ dùng `api` khi các project khác cần dùng trực tiếp library đó.
+
+## compileOnly
+
+Loại này chỉ thêm library khi compile code. Nó không thêm library khi runtime.
+
+Hữu ích khi môi trường cung cấp library sau. Ví dụ, web server cung cấp Servlet API. Project của bạn chỉ cần nó để compile.
+
+## runtimeOnly
+
+Loại này chỉ thêm library khi runtime. Nó không thêm library khi compile code.
+
+Hữu ích cho các library hoạt động ở background. Ví dụ, bạn cần database driver để kết nối database. Bạn không viết code trực tiếp cho driver đó.
+
+## testImplementation
+
+Loại này chỉ thêm library cho các test. Nó giúp bạn compile và chạy test code.
+
+Library hoàn toàn bị ẩn khỏi main application code. Điều này giữ cho main project sạch sẽ. Bạn dùng loại này cho các testing tool như JUnit hoặc Mockito.
