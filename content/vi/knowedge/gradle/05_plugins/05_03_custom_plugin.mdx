@@ -1,0 +1,33 @@
+# 5.3 Custom Plugins
+
+Đôi khi, bạn cần dùng cùng một build logic nhiều lần. Bạn có thể đặt logic này vào một custom plugin. Một custom plugin giúp bạn reuse code dễ dàng. Bạn có thể viết custom plugins bằng Groovy, Kotlin, hoặc Java.
+
+Có hai cách chính để tạo một custom plugin.
+
+## buildSrc Directory
+
+Cách đầu tiên là dùng `buildSrc` directory. Bạn tạo folder này ở root của project.
+
+Khi bạn chạy Gradle, nó tự động tìm folder `buildSrc`. Nó compile code bên trong. Sau đó, bạn có thể dùng plugin trong các build scripts của project.
+
+**Benefits:**
+- Rất dễ và nhanh để set up.
+- Giúp main build script của bạn sạch hơn nhiều.
+
+**Limits:**
+- Bạn chỉ có thể dùng plugin này trong một project này. Bạn không thể share nó với các project khác.
+- Nếu bạn thay đổi code bên trong `buildSrc`, Gradle có thể cần rebuild toàn bộ project.
+
+## Standalone Plugin
+
+Cách thứ hai là tạo một standalone plugin. Đây là một Gradle project hoàn toàn riêng biệt.
+
+Khi bạn build một standalone plugin, nó tạo ra một JAR file. Bạn có thể publish JAR file này lên một online repository. Ví dụ là Maven Central hoặc Gradle Plugin Portal.
+
+**Benefits:**
+- Bạn có thể dùng plugin này trong nhiều project khác nhau.
+- Bạn có thể share nó với các developers khác.
+
+**Limits:**
+- Mất nhiều thời gian hơn để set up.
+- Bạn phải tự quản lý versions và publish plugin.

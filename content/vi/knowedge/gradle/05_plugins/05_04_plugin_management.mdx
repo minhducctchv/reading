@@ -1,0 +1,56 @@
+# 5.4 Plugin Management
+
+## pluginManagement là gì?
+
+`pluginManagement` là một special block trong Gradle.
+Bạn viết nó trong file `settings.gradle` hoặc `settings.gradle.kts`.
+Nó phải là block đầu tiên trong file.
+Nó cho Gradle biết nơi tìm và cách load plugins.
+
+## Setting Plugin Repositories
+
+Mặc định, Gradle tìm plugins trong Gradle Plugin Portal.
+Đôi khi, plugins không có ở đó.
+Bạn có thể cho Gradle biết để tìm ở nơi khác.
+Bạn dùng block `repositories` để làm điều này.
+
+```kotlin
+// settings.gradle.kts
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+    }
+}
+```
+
+Code này cho Gradle biết kiểm tra ba nơi.
+Nó sẽ tìm trong Plugin Portal, Maven Central, và Google.
+
+## Managing Plugin Versions
+
+Bạn có thể set version của plugin ở một nơi duy nhất.
+Điều này rất hữu ích cho các large projects với nhiều modules.
+Bạn set version bên trong block `plugins`.
+
+```kotlin
+// settings.gradle.kts
+pluginManagement {
+    plugins {
+        id("org.springframework.boot") version "3.1.2"
+    }
+}
+```
+
+Bây giờ, tất cả modules sẽ dùng version cụ thể này.
+Bạn không cần viết version lại trong các file `build.gradle.kts`.
+
+```kotlin
+// build.gradle.kts
+plugins {
+    id("org.springframework.boot") // Không cần version ở đây
+}
+```
+
+Điều này giữ project của bạn clean và consistent.

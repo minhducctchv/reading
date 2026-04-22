@@ -1,0 +1,44 @@
+# 4.2 Custom Tasks
+
+Đôi khi, các built-in task không đủ. Bạn có thể cần làm gì đó đặc biệt cho project. Gradle cho phép bạn tạo custom task bằng Groovy hoặc Kotlin.
+
+## DefaultTask
+
+`DefaultTask` là base class của tất cả task trong Gradle. Khi muốn tạo một task hoàn toàn mới, bạn extend `DefaultTask`. Gradle sẽ chạy code của bạn khi task được execute.
+
+Khi tạo custom task class, bạn dùng annotation `@TaskAction`. Annotation này cho Gradle biết method nào cần chạy.
+
+```kotlin
+// Example of a custom task extending DefaultTask
+abstract class MyCustomGreetingTask : DefaultTask() {
+    @TaskAction
+    fun greet() {
+        println("Hello from my custom task!")
+    }
+}
+
+// Registering the custom task
+tasks.register<MyCustomGreetingTask>("myGreeting")
+```
+
+## Task Types
+
+Gradle cung cấp nhiều task type sẵn có, còn gọi là "built-in task types". Chúng extend `DefaultTask` và thêm các tính năng cụ thể.
+
+Ví dụ, bạn không cần viết task mới từ đầu để copy file. Chỉ cần dùng task type `Copy`.
+
+```kotlin
+// Example of using the built-in Copy task type
+tasks.register<Copy>("copyReports") {
+    from("build/reports")
+    into("build/backup")
+}
+```
+
+Một số built-in task type phổ biến:
+- **Copy**: Copy file từ nơi này sang nơi khác.
+- **Delete**: Xóa file hoặc directory.
+- **Zip**: Tạo file ZIP.
+- **Exec**: Chạy một command-line program.
+
+Dùng các task type có sẵn giúp tiết kiệm thời gian. Bạn chỉ cần configure chúng. Nếu không có built-in type nào phù hợp, bạn có thể tạo custom task bằng cách extend `DefaultTask`.
