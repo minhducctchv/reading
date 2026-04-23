@@ -24,8 +24,12 @@ export function proxy(request) {
     return NextResponse.next();
   }
 
-  // Kiểm tra auth (bỏ qua login và api/auth)
-  if (!pathname.startsWith("/login") && !pathname.startsWith("/api/auth")) {
+  // Kiểm tra auth chỉ cho API endpoints (bỏ qua /api/auth và /api/vocabulary/search)
+  if (
+    pathname.startsWith("/api/") &&
+    !pathname.startsWith("/api/auth") &&
+    !pathname.startsWith("/api/vocabulary/search")
+  ) {
     const authCookie = request.cookies.get("auth");
     if (!authCookie || authCookie.value !== "true") {
       return NextResponse.redirect(new URL("/login", request.url));
