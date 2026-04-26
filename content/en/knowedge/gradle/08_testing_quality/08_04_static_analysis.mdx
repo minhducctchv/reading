@@ -1,7 +1,58 @@
 # 8.4 Static Analysis
 
+### Overview
+Static analysis tools check your code without running it. They help you find bugs and improve code quality early. They also make sure your team follows the same coding standards. Gradle supports many popular static analysis tools using plugins.
+
 ## Checkstyle
+Checkstyle checks if your Java code follows a specific coding standard. It looks at code formatting, naming rules, and code structure. 
+
+### How to use
+You can add the `checkstyle` plugin to your `build.gradle` file. You need an XML file to define the rules. When you run the `check` task, Gradle checks the code. If it finds mistakes, it will stop the build.
+
+```groovy
+plugins {
+    id 'checkstyle'
+}
+
+checkstyle {
+    toolVersion = '10.12.4'
+}
+```
 
 ## PMD
+PMD is a tool that analyzes source code. It finds common programming mistakes. For example, it can find empty catch blocks, unused variables, and bad code design.
+
+### How to use
+Add the `pmd` plugin to your project. PMD has built-in rulesets that you can choose from. You can also create your own rules. Running the `check` task will start the PMD analysis.
+
+```groovy
+plugins {
+    id 'pmd'
+}
+
+pmd {
+    consoleOutput = true
+    toolVersion = '6.55.0'
+    ruleSets = ["category/java/errorprone.xml", "category/java/bestpractices.xml"]
+}
+```
 
 ## SpotBugs
+SpotBugs finds bugs in compiled Java bytecode. It does not look at the source code. It looks for hundreds of different bug patterns. It is an updated version of the older FindBugs tool.
+
+### How to use
+You need to add the SpotBugs plugin from the Gradle Plugin Portal. SpotBugs analyzes your `.class` files. It runs automatically when you run the `check` task. It creates a report showing any issues it finds.
+
+```groovy
+plugins {
+    id "com.github.spotbugs" version "6.0.0"
+}
+
+spotbugs {
+    ignoreFailures = false
+    showProgress = true
+}
+```
+
+### Summary
+Using these three tools together makes your code much better. Checkstyle keeps the code clean and readable. PMD stops bad coding practices. SpotBugs finds hidden bugs before they happen. You should run these tools automatically in your build process.

@@ -1,1 +1,68 @@
 # 8.1 Unit Testing (JUnit, TestNG)
+
+### Overview
+Unit testing checks individual parts of your code. It ensures each part works correctly on its own. Gradle makes it easy to run unit tests. It has built-in support for popular frameworks like JUnit and TestNG.
+
+### Using JUnit 5
+JUnit 5 is the modern standard for Java testing. To use it, you must tell Gradle to use the JUnit Platform. 
+
+Add this to your `build.gradle` file:
+
+```groovy
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+```
+
+This configuration downloads the JUnit 5 library. It also instructs the `test` task to run using the JUnit Platform.
+
+### Using TestNG
+TestNG is another powerful testing framework. It is often used for more complex test scenarios. 
+
+To use TestNG, configure your `build.gradle` like this:
+
+```groovy
+dependencies {
+    testImplementation 'org.testng:testng:7.8.0'
+}
+
+tasks.named('test') {
+    useTestNG()
+}
+```
+
+This downloads TestNG and tells the `test` task to use it for execution.
+
+### Running Tests
+You can run your tests using the Gradle command line. Open your terminal and run:
+
+```bash
+./gradlew test
+```
+
+This command compiles your source code, compiles your test code, and executes all the tests. If a test fails, the build will also fail.
+
+### Test Reports
+Gradle generates a detailed test report automatically. This report shows which tests passed, failed, or were skipped.
+
+You can find the HTML report in your build directory. Open this file in your web browser:
+`build/reports/tests/test/index.html`
+
+### Running Specific Tests
+Sometimes you only want to run one test. You can filter tests directly from the command line. Use the `--tests` flag followed by the class name or method name.
+
+```bash
+./gradlew test --tests "com.example.MyServiceTest"
+```
+
+You can also use wildcards to run a group of related tests:
+
+```bash
+./gradlew test --tests "*ServiceTest"
+```
+
+This feature saves time when you are focusing on a specific bug or feature.

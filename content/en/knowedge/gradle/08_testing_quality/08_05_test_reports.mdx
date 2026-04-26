@@ -1,1 +1,46 @@
 # 8.5 Test Reports
+
+### Overview
+Gradle automatically generates test reports when you run your tests. These reports are HTML pages that provide a clear summary of your test results. They show which tests passed, failed, or were skipped.
+
+### Finding the Test Reports
+By default, Gradle saves the test reports in your project's `build` directory. You can find the main HTML report file here: `build/reports/tests/test/index.html`.
+
+Open this file in any web browser to view the detailed results. It includes the total number of tests run, the execution time, and details for each test class.
+
+### Configuring Test Reports
+You can customize how Gradle generates these reports in your `build.gradle` file. You can enable or disable HTML or XML reports.
+
+```groovy
+tasks.named('test') {
+    reports {
+        html.required = true
+        junitXml.required = true
+    }
+}
+```
+
+- **HTML reports:** Used for viewing results in a browser.
+- **XML reports:** Often used by Continuous Integration (CI) servers, like Jenkins, to process the results.
+
+### Aggregating Reports in Multi-Project Builds
+If you have a multi-project build, you might want one single report that combines tests from all subprojects. Gradle provides the `test-report-aggregation` plugin for this.
+
+Apply the plugin in your root project:
+
+```groovy
+plugins {
+    id 'test-report-aggregation'
+}
+```
+
+Then, add dependencies on the subprojects you want to aggregate:
+
+```groovy
+dependencies {
+    testReportAggregation project(':projectA')
+    testReportAggregation project(':projectB')
+}
+```
+
+Run the `testAggregateTestReport` task to generate the combined report. You can find it in the `build/reports/tests/aggregateTestReport/` directory of your root project.

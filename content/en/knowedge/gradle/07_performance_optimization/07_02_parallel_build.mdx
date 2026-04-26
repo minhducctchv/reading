@@ -1,1 +1,50 @@
 # 7.2 Parallel Build
+
+Gradle can run tasks at the same time. This is called a parallel build. It makes your build finish faster.
+
+## How it works
+
+By default, Gradle runs tasks one by one. In a multi-project build, many projects do not depend on each other. Gradle can run tasks from these independent projects at the same time.
+
+For example, if Project A and Project B do not share code, Gradle can compile them together.
+
+## Enabling Parallel Build
+
+You can turn on parallel build in two ways.
+
+**1. Using the command line**
+
+Add the `--parallel` flag when you run Gradle:
+
+```bash
+./gradlew build --parallel
+```
+
+**2. Using `gradle.properties`**
+
+This is the recommended way. It turns on parallel build for all your builds. Add this line to your `gradle.properties` file:
+
+```properties
+org.gradle.parallel=true
+```
+
+## Controlling Worker Threads
+
+Gradle uses "workers" to run tasks in parallel. By default, Gradle uses as many workers as your computer has CPU cores.
+
+You can change the maximum number of workers. Add this line to your `gradle.properties` file:
+
+```properties
+org.gradle.workers.max=4
+```
+
+This limits Gradle to use a maximum of 4 workers. This is useful if you want to save computer resources for other programs.
+
+## Requirements for Parallel Build
+
+To use parallel build safely, your projects must be independent.
+
+* **No shared state:** Tasks in different projects must not read or write to the same files at the same time.
+* **Decoupled projects:** Projects should only interact through defined dependencies. Do not access another project's configuration directly.
+
+If your projects share state, parallel build might cause errors.
