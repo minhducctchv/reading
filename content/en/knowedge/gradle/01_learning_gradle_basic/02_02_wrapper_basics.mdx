@@ -10,3 +10,48 @@ type: web-mobile development
 
 status: learning
 ---
+
+# Wrapper Basics
+
+Benefits:
+- Run gradle without installing gradle manually
+- Provisions the same gradle version for different users and environment
+
+## Using Gradle Wrapper
+
+Using system-installed Gradle => `gradle command`
+
+Using gradle wrapper => `./gradlew command` (mac/linux) `gradlew.bat command` (Windows)
+
+relative path: `../gradlew command`
+
+## Understanding the Wrapper files
+
+```
+.
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar              (1)
+│       └── gradle-wrapper.properties       (2)
+├── gradlew                                 (3)
+└── gradlew.bat                             (4)
+```
+
+(1). java code => downloading and installing the correct version of Gradle
+
+(2). configuration for Gradle Wrapper
+
+(3). wrapper around `gradle-wrapper.jar` to execute gradle tasks on Unix-based systems
+
+(4). the same purpose as `gradlew` but is used for Windows system
+
+Check & update version:
+
+```
+./gradlew --version
+./gradlew wrapper --gradle-version 7.2
+
+```
+
+> [!IMPORTANT]
+> You should never alter these manually
