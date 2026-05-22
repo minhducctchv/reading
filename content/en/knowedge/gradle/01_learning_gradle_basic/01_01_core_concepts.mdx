@@ -1,0 +1,79 @@
+---
+id: 01_01_core_concepts
+
+tags:
+- gralde
+- core concepts
+- project structure
+- invoking gradle
+
+created: 2026-05-22
+
+type: web-mobile development
+
+status: learned
+---
+
+![gradle](/gradle/gradle-basic-1.png)
+
+# Core Concepts
+
+Gradle builds = projects + tasks, config = build Script
+
+## Core concepts
+
+Gradle builds = projects + tasks, config = build Script
+
+**Build**  = (project + build script)*n + env => output
+
+**Project** = project / subproject / library
+
+**Tasks** = unit of work, build scripts | plugins => tasks
+
+**Build script** = instruction how to build project: declare tasks, Dependencies...
+
+**plugins** =  extend gradle's capabilities, add tasks and conventions to project
+
+**Dependencies** = internal or external resource required by a project
+
+## Project structure
+
+```
+project
+├── gradle                          (1)
+├── gradlew                         (2)  
+├── gradlew.bat                     (2)    
+├── settings.gradle(.kts)           (3)
+├── subproject-a                    
+│   ├── build.gradle(.kts)          (4)    
+│   └── src/                        (5)
+└── subproject-b
+    ├── build.gradle(.kts)          (4)  
+    └── src/                        (5)                    
+```
+
+(1). Gralde folder: wrapper files and more
+
+(2). Wrapper script => THIS IS A GRADLE PROJECT!
+
+(3). gradle setting file: define project name and subprojects
+
+(4). build script for each subproject
+
+(5). source code and other file of each subproject
+
+## Invoking Gradle
+
+### In the IDE
+
+Gradle is built-in to many IDES => click buttons in IDE => invoke gradle
+
+### On the Command Line
+
+Once Gradle is installed => `gradle command`
+
+Do not recommend use it but rather Gradle Wrapper
+
+### With the Gradle Wrapper
+
+Wrapper is a script that invokes declared version of Gradle to run command => `./gradlew command`
