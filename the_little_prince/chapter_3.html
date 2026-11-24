@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Little Prince — Chapter 3</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #334155;
+      --muted: #64748b;
+      --heading: #0f172a;
+      --c-subj: #1d4ed8;
+      --c-verb: #dc2626;
+      --c-obj: #0f766e;
+      --c-mod: #b45309;
+      --c-conn: #7c3aed;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 2.5rem 1.25rem 4rem;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.5rem 2.75rem;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.75rem;
+      color: var(--heading);
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem 1.25rem;
+      padding: 0.9rem 1.15rem;
+      margin-bottom: 2rem;
+      background-color: #f1f5f9;
+      border-radius: 10px;
+      font-size: 0.875rem;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .swatch-subj { background-color: var(--c-subj); }
+    .swatch-verb { background-color: var(--c-verb); }
+    .swatch-obj { background-color: var(--c-obj); }
+    .swatch-mod { background-color: var(--c-mod); }
+    .swatch-conn { background-color: var(--c-conn); }
+
+    .story p {
+      margin: 0 0 1.5rem;
+      font-size: 1.125rem;
+      line-height: 2.1;
+    }
+
+    .story p:last-child {
+      margin-bottom: 0;
+    }
+
+    .subj { color: var(--c-subj); font-weight: 500; }
+    .verb { color: var(--c-verb); font-weight: 500; }
+    .obj  { color: var(--c-obj); }
+    .mod  { color: var(--c-mod); }
+    .conn { color: var(--c-conn); font-weight: 500; }
+
+    .sep {
+      white-space: pre-wrap;
+    }
+
+    u {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .story u {
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 1px 2px;
+      margin: 0 -2px;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+      transition: background-color 0.15s ease;
+    }
+
+    .story u:hover,
+    .story u:focus-visible,
+    .story u.is-active {
+      background-color: rgba(15, 23, 42, 0.08);
+      outline: none;
+    }
+
+    .story u.is-highlighted {
+      background-color: #fef08a;
+    }
+
+    .story u.is-highlighted:hover,
+    .story u.is-highlighted:focus-visible,
+    .story u.is-highlighted.is-active {
+      background-color: #fde047;
+    }
+
+    .story u:focus-visible {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.45);
+    }
+
+    .popover {
+      position: absolute;
+      z-index: 1000;
+      width: min(360px, calc(100vw - 24px));
+      background-color: #0f172a;
+      color: #f8fafc;
+      border-radius: 10px;
+      padding: 0.85rem 1rem 0.9rem;
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.24), 0 2px 6px rgba(15, 23, 42, 0.12);
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+    }
+
+    .popover.is-open {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .popover-arrow {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #0f172a;
+      transform: rotate(45deg);
+    }
+
+    .popover[data-placement="bottom"] .popover-arrow {
+      top: -5px;
+    }
+
+    .popover[data-placement="top"] .popover-arrow {
+      bottom: -5px;
+    }
+
+    .popover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.45rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(248, 250, 252, 0.14);
+    }
+
+    .popover-word {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fde68a;
+    }
+
+    .popover-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    .popover-btn {
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      cursor: pointer;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      line-height: 1;
+      padding: 0;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .popover-btn:hover {
+      background-color: rgba(248, 250, 252, 0.12);
+      color: #ffffff;
+    }
+
+    .popover-highlight.is-active {
+      background-color: rgba(250, 204, 21, 0.22);
+      color: #fde047;
+    }
+
+    .popover-highlight.is-active:hover {
+      background-color: rgba(250, 204, 21, 0.34);
+      color: #fef08a;
+    }
+
+    .popover-lines {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .popover-pos {
+      color: #93c5fd;
+    }
+
+    .popover-meaning {
+      color: #f8fafc;
+    }
+
+    .popover-ipa {
+      color: #a7f3d0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+    }
+
+    .popover-vi {
+      color: #fed7aa;
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .story p {
+        font-size: 1.05rem;
+        line-height: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>The Little Prince — Chapter 3</h1>
+      <p class="subtitle">Phân tách ý (câu đơn) bằng 5 dấu cách, phân màu thành phần câu &amp; gạch chân từ khóa</p>
+    </header>
+
+    <section class="legend" aria-label="Chú giải màu sắc và ký hiệu">
+      <span class="legend-item"><span class="swatch swatch-subj"></span><span class="subj">Chủ ngữ (Subject)</span></span>
+      <span class="legend-item"><span class="swatch swatch-verb"></span><span class="verb">Động từ (Verb)</span></span>
+      <span class="legend-item"><span class="swatch swatch-obj"></span><span class="obj">Tân ngữ / Bổ ngữ (Object / Complement)</span></span>
+      <span class="legend-item"><span class="swatch swatch-mod"></span><span class="mod">Trạng ngữ / Bổ nghĩa (Modifier)</span></span>
+      <span class="legend-item"><span class="swatch swatch-conn"></span><span class="conn">Từ nối / Liên từ (Connector)</span></span>
+      <span class="legend-item"><code>[5 spaces]</code> Ngăn các ý (câu đơn)</span>
+      <span class="legend-item"><u>keyword</u> Từ khóa chính (nhấn để xem giải nghĩa &amp; phát âm)</span>
+    </section>
+
+    <article class="story">
+      <p>
+        <span class="subj">It</span> <span class="verb">took</span> <span class="obj">me</span> <span class="mod">a <u>long time</u></span> <span class="obj">to <u>understand</u></span><span class="sep">     </span><span
+          class="conn">where</span> <span class="subj">he</span> <span class="verb"><u>came from</u></span>.<span class="sep">     </span><span
+          class="subj">The <u>little prince</u></span>,<span class="sep">     </span><span
+          class="conn">who</span> <span class="verb">asked</span> <span class="obj">me</span> <span class="obj">so many <u>questions</u></span>,<span class="sep">     </span><span
+          class="mod"><u>never</u></span> <span class="verb"><u>seemed</u> to <u>hear</u></span> <span class="obj">the ones</span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">asked</span> <span class="obj">him</span>.<span class="sep">     </span><span
+          class="subj">It</span> <span class="verb">was</span> <span class="obj">things</span><span class="sep">     </span><span
+          class="subj">he</span> <span class="verb">said</span> <span class="mod">quite <u>at random</u></span><span class="sep">     </span><span
+          class="conn">that</span>, <span class="mod"><u>bit by bit</u></span>, <span class="verb"><u>explained</u></span> <span class="obj"><u>everything</u></span>.
+      </p>
+
+      <p>
+        <span class="mod"><u>For instance</u></span>, <span class="conn">when</span> <span class="subj">he</span> <span class="mod">first</span> <span class="verb"><u>caught sight of</u></span> <span class="obj">my <u>airplane</u></span><span class="sep">     </span>(<span
+          class="subj">I</span> <span class="verb">won't draw</span> <span class="obj">my airplane</span>;<span class="sep">     </span><span
+          class="subj">that</span> <span class="verb">would be</span> <span class="obj">much too <u>complicated</u></span> <span class="mod">for me</span>)<span class="sep">     </span><span
+          class="subj">he</span> <span class="verb">asked</span>:<span class="sep">     </span>"<span
+          class="conn">What</span><span class="verb">'s</span> <span class="subj">that thing</span> <span class="mod"><u>over there</u></span>?"
+      </p>
+
+      <p>
+        "<span class="subj">It</span><span class="verb">'s</span> <span class="mod">not</span> <span class="obj">a thing</span>.<span class="sep">     </span><span
+          class="subj">It</span> <span class="verb"><u>flies</u></span>.<span class="sep">     </span><span
+          class="subj">It</span><span class="verb">'s</span> <span class="obj">an airplane</span>.<span class="sep">     </span><span
+          class="obj">My airplane</span>."
+      </p>
+
+      <p>
+        <span class="conn">And</span> <span class="subj">I</span> <span class="verb">was</span> <span class="obj"><u>proud</u></span> <span class="mod">to tell him</span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">could <u>fly</u></span>.<span class="sep">     </span><span
+          class="conn">Then</span> <span class="subj">he</span> <span class="verb"><u>exclaimed</u></span>:<span class="sep">     </span>"<span
+          class="conn">What</span>!<span class="sep">     </span><span
+          class="subj">You</span> <span class="verb"><u>fell</u></span> <span class="mod">out of the <u>sky</u></span>?"
+      </p>
+
+      <p>
+        "<span class="mod">Yes</span>,"<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">said</span> <span class="mod"><u>modestly</u></span>.
+      </p>
+
+      <p>
+        "<span class="mod">Oh</span>!<span class="sep">     </span><span
+          class="subj">That</span><span class="verb">'s</span> <span class="obj"><u>funny</u></span>..."
+      </p>
+
+      <p>
+        <span class="conn">And</span> <span class="subj">the little prince</span> <span class="verb"><u>broke into</u></span> <span class="obj">a <u>lovely</u> <u>peal of laughter</u></span>,<span class="sep">     </span><span
+          class="conn">which</span> <span class="verb"><u>annoyed</u></span> <span class="obj">me</span> <span class="mod"><u>a good deal</u></span>.<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">like</span> <span class="obj">my <u>misfortunes</u></span> <span class="mod">to be <u>taken seriously</u></span>.<span class="sep">     </span><span
+          class="conn">Then</span> <span class="subj">he</span> <span class="verb"><u>added</u></span>,<span class="sep">     </span>"<span
+          class="conn">So</span> <span class="subj">you</span> <span class="verb">fell</span> <span class="mod">out of the sky</span>, <span class="mod">too</span>.<span class="sep">     </span><span
+          class="conn">What</span> <span class="obj"><u>planet</u></span> <span class="verb">are</span> <span class="subj">you</span> <span class="mod">from</span>?"
+      </p>
+
+      <p>
+        <span class="subj">That</span> <span class="verb">was</span><span class="sep">     </span><span
+          class="conn">when</span> <span class="subj">I</span> <span class="verb">had</span> <span class="obj">the first <u>clue</u></span> <span class="mod">to the <u>mystery</u> of his <u>presence</u></span>,<span class="sep">     </span><span
+          class="conn">and</span> <span class="subj">I</span> <span class="verb"><u>questioned</u></span> <span class="obj">him</span> <span class="mod"><u>sharply</u></span>.<span class="sep">     </span>"<span
+          class="verb">Do</span> <span class="subj">you</span> <span class="verb">come</span> <span class="mod">from <u>another</u> planet</span>?"
+      </p>
+
+      <p>
+        <span class="conn">But</span> <span class="subj">he</span> <span class="verb">made</span> <span class="obj"><u>no answer</u></span>.<span class="sep">     </span><span
+          class="subj">He</span> <span class="verb"><u>shook</u></span> <span class="obj">his <u>head</u></span> <span class="mod">a little</span>, <span class="mod">still <u>staring</u> at my airplane</span>.<span class="sep">     </span>"<span
+          class="mod"><u>Of course</u></span>, <span class="subj">that</span> <span class="verb">couldn't have <u>brought</u></span> <span class="obj">you</span> <span class="mod">from very <u>far</u></span>..."
+      </p>
+
+      <p>
+        <span class="conn">And</span> <span class="subj">he</span> <span class="verb"><u>fell into</u></span> <span class="obj">a <u>reverie</u></span><span class="sep">     </span><span
+          class="conn">that</span> <span class="verb"><u>lasted</u></span> <span class="mod">a <u>long while</u></span>.<span class="sep">     </span><span
+          class="conn">Then</span>, <span class="verb"><u>taking</u></span> <span class="obj">my <u>sheep</u></span> <span class="mod">out of his <u>pocket</u></span>,<span class="sep">     </span><span
+          class="subj">he</span> <span class="verb"><u>plunged into</u></span> <span class="obj"><u>contemplation</u> of his <u>treasure</u></span>.
+      </p>
+
+      <p>
+        <span class="subj">You</span> <span class="verb">can <u>imagine</u></span><span class="sep">     </span><span
+          class="conn">how</span> <span class="obj"><u>intrigued</u></span> <span class="subj">I</span> <span class="verb">was</span> <span class="mod">by this <u>hint</u> about "<u>other planets</u>."</span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>tried</u> to <u>learn</u></span> <span class="obj">more</span>:<span class="sep">     </span>"<span
+          class="conn">Where</span> <span class="verb">do</span> <span class="subj">you</span> <span class="verb">come from</span>, <span class="mod"><u>little fellow</u></span>?<span class="sep">     </span><span
+          class="conn">Where</span> <span class="verb">is</span> <span class="subj">this '<u>where I live</u>' <u>of yours</u></span>?<span class="sep">     </span><span
+          class="conn">Where</span> <span class="verb">will</span> <span class="subj">you</span> <span class="verb">be taking</span> <span class="obj">my sheep</span>?"
+      </p>
+
+      <p>
+        <span class="mod">After a <u>thoughtful</u> <u>silence</u></span> <span class="subj">he</span> <span class="verb"><u>answered</u></span>,<span class="sep">     </span>"<span
+          class="subj">The <u>good thing</u></span> <span class="mod">about the <u>crate</u> you've given me</span> <span class="verb">is</span><span class="sep">     </span><span
+          class="conn">that</span> <span class="subj">he</span> <span class="verb">can use</span> <span class="obj">it</span> <span class="mod">for a house</span> <span class="mod"><u>after dark</u></span>."
+      </p>
+
+      <p>
+        "<span class="mod"><u>Of course</u></span>.<span class="sep">     </span><span
+          class="conn">And</span> <span class="conn">if</span> <span class="subj">you</span><span class="verb">'re</span> <span class="obj">good</span>,<span class="sep">     </span><span
+          class="subj">I</span><span class="verb">'ll give</span> <span class="obj">you</span> <span class="obj">a <u>rope</u></span> <span class="mod">to <u>tie him up</u></span> <span class="mod"><u>during the day</u></span>.<span class="sep">     </span><span
+          class="conn">And</span> <span class="obj">a <u>stake</u></span> <span class="mod">to tie him to</span>."
+      </p>
+
+      <p>
+        <span class="subj">This <u>proposition</u></span> <span class="verb">seemed to <u>shock</u></span> <span class="obj">the little prince</span>.<span class="sep">     </span>"<span
+          class="verb"><u>Tie</u></span> <span class="obj">him</span> <span class="mod">up</span>?<span class="sep">     </span><span
+          class="obj">What a funny <u>idea</u></span>!"
+      </p>
+
+      <p>
+        "<span class="conn">But</span> <span class="conn">if</span> <span class="subj">you</span> <span class="verb">don't <u>tie</u></span> <span class="obj">him</span> <span class="mod">up</span>,<span class="sep">     </span><span
+          class="subj">he</span><span class="verb">'ll <u>wander off</u></span> <span class="mod"><u>somewhere</u></span><span class="sep">     </span><span
+          class="conn">and</span> <span class="verb"><u>get lost</u></span>."
+      </p>
+
+      <p>
+        <span class="subj">My <u>friend</u></span> <span class="verb"><u>burst out</u> <u>laughing</u></span> <span class="mod">again</span>.<span class="sep">     </span>"<span
+          class="conn">Where</span> <span class="verb">could</span> <span class="subj">he</span> <span class="verb">go</span>?"
+      </p>
+
+      <p>
+        "<span class="mod"><u>Anywhere</u></span>.<span class="sep">     </span><span
+          class="mod"><u>Straight ahead</u></span>..."
+      </p>
+
+      <p>
+        <span class="conn">Then</span> <span class="subj">the little prince</span> <span class="verb"><u>remarked</u></span> <span class="mod">quite <u>seriously</u></span>,<span class="sep">     </span>"<span
+          class="conn"><u>Even if</u></span> <span class="subj">he</span> <span class="verb">did</span>,<span class="sep">     </span><span
+          class="subj">everything</span><span class="verb">'s</span> <span class="obj">so <u>small</u></span><span class="sep">     </span><span
+          class="conn">where</span> <span class="subj">I</span> <span class="verb"><u>live</u></span>!"
+      </p>
+
+      <p>
+        <span class="conn">And</span> <span class="subj">he</span> <span class="verb">added</span>, <span class="mod"><u>perhaps</u> a little <u>sadly</u></span>,<span class="sep">     </span>"<span
+          class="mod"><u>Straight ahead</u></span>, <span class="subj">you</span> <span class="verb">can't go</span> <span class="mod">very far</span>."
+      </p>
+    </article>
+  </main>
+
+  <div id="kw-popover" class="popover" role="dialog" aria-live="polite" hidden>
+    <div class="popover-arrow" aria-hidden="true"></div>
+    <div class="popover-header">
+      <span class="popover-word"></span>
+      <span class="popover-actions">
+        <button type="button" class="popover-btn popover-speak" title="Nghe phát âm" aria-label="Nghe phát âm">🔊</button>
+        <button type="button" class="popover-btn popover-highlight" title="Highlight từ khóa" aria-label="Highlight từ khóa" aria-pressed="false">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m9 11-6 6v3h9l3-3"/>
+            <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>
+          </svg>
+        </button>
+        <button type="button" class="popover-btn popover-close" title="Đóng (Esc)" aria-label="Đóng">×</button>
+      </span>
+    </div>
+    <ul class="popover-lines">
+      <li>- (<span class="popover-pos"></span>): <span class="popover-meaning"></span></li>
+      <li>- <span class="popover-ipa"></span> - <span class="popover-vi"></span></li>
+    </ul>
+  </div>
+
+  <script>
+    const KEYWORDS = {
+      "long time": ["cụm danh từ", "thời gian dài, lâu", "/lɒŋ taɪm/", "LONG TAIM"],
+      "understand": ["động từ", "hiểu", "/ˌʌn.dəˈstænd/", "ăn-đờ-XTEN"],
+      "came from": ["cụm động từ (quá khứ của come from)", "đến từ, xuất phát từ", "/keɪm frɒm/", "KÂYM phrơm"],
+      "little prince": ["cụm danh từ", "hoàng tử bé", "/ˈlɪt.əl prɪns/", "LI-tồ PRINX"],
+      "questions": ["danh từ số nhiều", "những câu hỏi", "/ˈkwes.tʃənz/", "KUÉT-chừnz"],
+      "never": ["trạng từ", "không bao giờ", "/ˈnev.ər/", "NE-vờ"],
+      "seemed": ["động từ (quá khứ của seem)", "có vẻ, dường như", "/siːmd/", "XÍMD"],
+      "hear": ["động từ", "nghe thấy", "/hɪər/", "HIA"],
+      "at random": ["cụm trạng từ / thành ngữ", "ngẫu nhiên, bâng quơ, không chủ ý", "/æt ˈræn.dəm/", "ẹt REN-đầm"],
+      "bit by bit": ["cụm trạng từ / thành ngữ", "dần dần, từng chút một", "/bɪt baɪ bɪt/", "BÍT bai BÍT"],
+      "explained": ["động từ (quá khứ của explain)", "đã giải thích, làm sáng tỏ", "/ɪkˈspleɪnd/", "ịch-XPLÊND"],
+      "everything": ["đại từ", "mọi thứ, mọi chuyện", "/ˈev.ri.θɪŋ/", "EV-ri-thing"],
+      "for instance": ["cụm trạng từ", "ví dụ như, chẳng hạn", "/fɔːr ˈɪn.stəns/", "phơ IN-xtừnx"],
+      "caught sight of": ["cụm động từ (quá khứ của catch sight of)", "bắt gặp, thoáng nhìn thấy", "/kɔːt saɪt əv/", "KÓT XAIT ơv"],
+      "airplane": ["danh từ", "máy bay", "/ˈeə.pleɪn/", "E-plên"],
+      "complicated": ["tính từ", "phức tạp, rắc rối", "/ˈkɒm.plɪ.keɪ.tɪd/", "KOM-pli-kây-tịt"],
+      "over there": ["cụm trạng từ", "ở đằng kia", "/ˌəʊ.və ˈðeər/", "âu-vờ ĐE"],
+      "flies": ["động từ (ngôi thứ 3 số ít của fly)", "bay", "/flaɪz/", "PHLAIZ"],
+      "proud": ["tính từ", "tự hào, hãnh diện", "/praʊd/", "PRAOD"],
+      "fly": ["động từ", "bay, lái máy bay", "/flaɪ/", "PHLAI"],
+      "exclaimed": ["động từ (quá khứ của exclaim)", "thốt lên, kêu lên", "/ɪkˈskleɪmd/", "ịch-XKLÊMD"],
+      "fell": ["động từ (quá khứ của fall)", "rơi xuống, ngã xuống", "/fel/", "PHEO"],
+      "sky": ["danh từ", "bầu trời", "/skaɪ/", "XKAI"],
+      "modestly": ["trạng từ", "một cách khiêm tốn", "/ˈmɒd.ɪst.li/", "MO-địt-xli"],
+      "funny": ["tính từ", "ngộ nghĩnh, kỳ lạ, buồn cười", "/ˈfʌn.i/", "PHĂN-ni"],
+      "broke into": ["cụm động từ (quá khứ của break into)", "bật lên, phá lên (cười, khóc)", "/brəʊk ˈɪn.tuː/", "BRÂUK in-tu"],
+      "lovely": ["tính từ", "đáng yêu, dễ thương, trong trẻo", "/ˈlʌv.li/", "LẮV-li"],
+      "peal of laughter": ["cụm danh từ", "tràng cười giòn giã", "/piːl əv ˈlɑːf.tər/", "PÍL ơv LÁF-tờ"],
+      "annoyed": ["động từ (quá khứ của annoy)", "làm bực mình, gây khó chịu", "/əˈnɔɪd/", "ơ-NOID"],
+      "a good deal": ["cụm trạng từ", "khá nhiều, rất nhiều", "/ə ɡʊd diːl/", "ơ GÚD ĐIL"],
+      "misfortunes": ["danh từ số nhiều", "những chuyện bất hạnh, rủi ro", "/ˌmɪsˈfɔː.tʃənz/", "mịt-PHO-chừnz"],
+      "taken seriously": ["cụm động từ (bị động)", "được nhìn nhận nghiêm túc, coi trọng", "/ˈteɪ.kən ˈsɪə.ri.əs.li/", "TÂY-kừn XIA-ri-ợt-xli"],
+      "added": ["động từ (quá khứ của add)", "nói thêm", "/ˈæd.ɪd/", "E-địt"],
+      "planet": ["danh từ", "hành tinh", "/ˈplæn.ɪt/", "PLE-nịt"],
+      "clue": ["danh từ", "manh mối, đầu mối", "/kluː/", "KLU"],
+      "mystery": ["danh từ", "điều bí ẩn", "/ˈmɪs.tər.i/", "MÍT-xtơ-ri"],
+      "presence": ["danh từ", "sự hiện diện, sự có mặt", "/ˈprez.əns/", "PRE-zừnx"],
+      "questioned": ["động từ (quá khứ của question)", "gặng hỏi, chất vấn", "/ˈkwes.tʃənd/", "KUÉT-chừnd"],
+      "sharply": ["trạng từ", "một cách sắc bén, dồn dập, gay gắt", "/ˈʃɑːp.li/", "SHÁP-li"],
+      "another": ["từ hạn định / đại từ", "một cái khác, khác", "/əˈnʌð.ər/", "ơ-NĂ-đờ"],
+      "no answer": ["cụm danh từ", "không có câu trả lời", "/nəʊ ˈɑːn.sər/", "NÂU AN-xờ"],
+      "shook": ["động từ (quá khứ của shake)", "lắc (đầu), rung", "/ʃʊk/", "SHÚC"],
+      "head": ["danh từ", "cái đầu", "/hed/", "HÉT"],
+      "staring": ["động từ (V-ing của stare)", "nhìn chằm chằm", "/ˈsteə.rɪŋ/", "XTE-ring"],
+      "of course": ["cụm trạng từ", "dĩ nhiên, tất nhiên rồi", "/əv kɔːs/", "ơv KÓX"],
+      "brought": ["động từ (quá khứ phân từ của bring)", "mang lại, đưa tới", "/brɔːt/", "BRÓT"],
+      "far": ["trạng từ / tính từ", "xa", "/fɑːr/", "PHA"],
+      "fell into": ["cụm động từ (quá khứ của fall into)", "rơi vào, chìm vào (trạng thái)", "/fel ˈɪn.tuː/", "PHEO in-tu"],
+      "reverie": ["danh từ", "sự mơ màng, trạng thái trầm tư", "/ˈrev.ər.i/", "RE-vơ-ri"],
+      "lasted": ["động từ (quá khứ của last)", "kéo dài", "/ˈlɑː.stɪd/", "LÁT-xtịt"],
+      "long while": ["cụm danh từ", "một hồi lâu, thời gian dài", "/lɒŋ waɪl/", "LONG OAIL"],
+      "taking": ["động từ (V-ing của take)", "lấy ra, rút ra", "/ˈteɪ.kɪŋ/", "TÂY-king"],
+      "sheep": ["danh từ", "con cừu", "/ʃiːp/", "SHÍP"],
+      "pocket": ["danh từ", "túi áo, túi quần", "/ˈpɒk.ɪt/", "PO-kịt"],
+      "plunged into": ["cụm động từ (quá khứ của plunge into)", "đắm chìm vào, lao vào", "/plʌndʒd ˈɪn.tuː/", "PLĂNJD in-tu"],
+      "contemplation": ["danh từ", "sự trầm ngâm, chiêm ngưỡng, suy tư", "/ˌkɒn.təmˈpleɪ.ʃən/", "kon-tờm-PLÂY-shừn"],
+      "treasure": ["danh từ", "kho báu, báu vật", "/ˈtreʒ.ər/", "TRE-giờ"],
+      "imagine": ["động từ", "tưởng tượng", "/ɪˈmædʒ.ɪn/", "i-ME-gin"],
+      "intrigued": ["tính từ / quá khứ phân từ", "bị cuốn hút, tò mò thích thú", "/ɪnˈtriːɡd/", "in-TRÍGD"],
+      "hint": ["danh từ", "lời gợi ý, điều bóng gió", "/hɪnt/", "HÍNT"],
+      "other planets": ["cụm danh từ số nhiều", "những hành tinh khác", "/ˈʌð.ər ˈplæn.ɪts/", "Ă-đờ PLE-nịtx"],
+      "tried": ["động từ (quá khứ của try)", "cố gắng, thử", "/traɪd/", "TRAID"],
+      "learn": ["động từ", "tìm hiểu, biết được, học", "/lɜːn/", "LƠN"],
+      "little fellow": ["cụm danh từ", "cậu bé nhỏ, anh chàng tí hon", "/ˈlɪt.əl ˈfel.əʊ/", "LI-tồ PHE-lâu"],
+      "where i live": ["cụm danh từ / mệnh đề", "nơi tôi sống", "/weər aɪ lɪv/", "oe ai LÍV"],
+      "of yours": ["cụm giới từ", "của cậu, của bạn", "/əv jɔːz/", "ơv YOZ"],
+      "thoughtful": ["tính từ", "trầm tư, đăm chiêu, sâu sắc", "/ˈθɔːt.fəl/", "THÓT-phồ"],
+      "silence": ["danh từ", "sự im lặng, tĩnh lặng", "/ˈsaɪ.ləns/", "XAI-lừnx"],
+      "answered": ["động từ (quá khứ của answer)", "trả lời", "/ˈɑːn.səd/", "AN-xợt"],
+      "good thing": ["cụm danh từ", "điều hay, điểm tốt", "/ɡʊd θɪŋ/", "GÚD THING"],
+      "crate": ["danh từ", "cái thùng gỗ, hòm gỗ", "/kreɪt/", "KRÂYT"],
+      "after dark": ["cụm giới từ", "khi trời tối, lúc sập tối", "/ˈɑːf.tər dɑːk/", "ÁF-tờ ĐÁK"],
+      "rope": ["danh từ", "sợi dây thừng", "/rəʊp/", "RÂUP"],
+      "tie him up": ["cụm động từ", "buộc/trói nó lại", "/taɪ hɪm ʌp/", "TAI him ẮP"],
+      "during the day": ["cụm giới từ", "vào ban ngày", "/ˈdjʊə.rɪŋ ðə deɪ/", "ĐIU-ring đờ ĐÂY"],
+      "stake": ["danh từ", "cái cọc (đóng xuống đất)", "/steɪk/", "XTÂYK"],
+      "proposition": ["danh từ", "lời đề nghị, đề xuất", "/ˌprɒp.əˈzɪʃ.ən/", "pro-pơ-ZI-shừn"],
+      "shock": ["động từ", "làm sững sờ, gây sốc", "/ʃɒk/", "SHÓK"],
+      "tie": ["động từ", "buộc, trói, cột", "/taɪ/", "TAI"],
+      "idea": ["danh từ", "ý tưởng, ý nghĩ", "/aɪˈdɪə/", "ai-ĐIA"],
+      "wander off": ["cụm động từ", "đi lang thang rồi lạc, bỏ đi mất", "/ˈwɒn.dər ɒf/", "OAN-đờ ÓPH"],
+      "somewhere": ["trạng từ", "đâu đó, nơi nào đó", "/ˈsʌm.weər/", "XĂM-oe"],
+      "get lost": ["cụm động từ", "bị lạc đường", "/ɡet lɒst/", "ghét LÓT"],
+      "friend": ["danh từ", "người bạn", "/frend/", "PHREND"],
+      "burst out": ["cụm động từ (quá khứ của burst out)", "bật lên, phá lên", "/bɜːst aʊt/", "BỚT AOT"],
+      "laughing": ["động từ (V-ing của laugh)", "cười", "/ˈlɑː.fɪŋ/", "LÁ-phing"],
+      "anywhere": ["trạng từ", "bất cứ đâu", "/ˈen.i.weər/", "E-ni-oe"],
+      "straight ahead": ["cụm trạng từ", "thẳng về phía trước", "/streɪt əˈhed/", "XTRÂYT ơ-HÉT"],
+      "remarked": ["động từ (quá khứ của remark)", "nhận xét, bình luận, lên tiếng", "/rɪˈmɑːkt/", "ri-MÁKT"],
+      "seriously": ["trạng từ", "một cách nghiêm túc, trang trọng", "/ˈsɪə.ri.əs.li/", "XIA-ri-ợt-xli"],
+      "even if": ["liên từ", "ngay cả khi, cho dù", "/ˈiː.vən ɪf/", "I-vừn íp"],
+      "small": ["tính từ", "nhỏ, bé", "/smɔːl/", "XMÓL"],
+      "live": ["động từ", "sống", "/lɪv/", "LÍV"],
+      "perhaps": ["trạng từ", "có lẽ, có thể", "/pəˈhæps/", "pơ-HÉPX"],
+      "sadly": ["trạng từ", "một cách buồn bã", "/ˈsæd.li/", "XÉT-li"]
+    };
+
+    const popover = document.getElementById("kw-popover");
+    const arrowEl = popover.querySelector(".popover-arrow");
+    const wordEl = popover.querySelector(".popover-word");
+    const posEl = popover.querySelector(".popover-pos");
+    const meaningEl = popover.querySelector(".popover-meaning");
+    const ipaEl = popover.querySelector(".popover-ipa");
+    const viEl = popover.querySelector(".popover-vi");
+    const speakBtn = popover.querySelector(".popover-speak");
+    const highlightBtn = popover.querySelector(".popover-highlight");
+    const closeBtn = popover.querySelector(".popover-close");
+
+    const HIGHLIGHT_STORAGE_KEY = "the_little_prince_chapter_3_highlights";
+    let activeTarget = null;
+
+    if (!("speechSynthesis" in window)) {
+      speakBtn.hidden = true;
+    }
+
+    function loadHighlightedIds() {
+      try {
+        const raw = localStorage.getItem(HIGHLIGHT_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return new Set(Array.isArray(parsed) ? parsed : []);
+      } catch (_) {
+        return new Set();
+      }
+    }
+
+    function saveHighlightedIds(ids) {
+      try {
+        localStorage.setItem(HIGHLIGHT_STORAGE_KEY, JSON.stringify([...ids]));
+      } catch (_) {}
+    }
+
+    const highlightedIds = loadHighlightedIds();
+
+    function syncHighlightBtn(target) {
+      const isHighlighted = Boolean(target && target.classList.contains("is-highlighted"));
+      highlightBtn.classList.toggle("is-active", isHighlighted);
+      highlightBtn.setAttribute("aria-pressed", isHighlighted ? "true" : "false");
+      const label = isHighlighted ? "Bỏ highlight" : "Highlight từ khóa";
+      highlightBtn.title = label;
+      highlightBtn.setAttribute("aria-label", label);
+    }
+
+    function positionPopover(target) {
+      const rect = target.getBoundingClientRect();
+      const popRect = popover.getBoundingClientRect();
+      const margin = 12;
+      const gap = 10;
+
+      const fitsBelow = rect.bottom + gap + popRect.height <= window.innerHeight - margin;
+      const placement = fitsBelow ? "bottom" : "top";
+      popover.dataset.placement = placement;
+
+      const targetCenterX = rect.left + rect.width / 2 + window.scrollX;
+      const minLeft = margin + window.scrollX;
+      const maxLeft = window.scrollX + window.innerWidth - popRect.width - margin;
+      const left = Math.max(minLeft, Math.min(targetCenterX - popRect.width / 2, maxLeft));
+
+      const top = placement === "bottom"
+        ? rect.bottom + window.scrollY + gap
+        : rect.top + window.scrollY - popRect.height - gap;
+
+      popover.style.left = `${left}px`;
+      popover.style.top = `${top}px`;
+
+      const arrowLeft = Math.max(14, Math.min(targetCenterX - left - 5, popRect.width - 24));
+      arrowEl.style.left = `${arrowLeft}px`;
+    }
+
+    function closePopover() {
+      if (activeTarget) {
+        activeTarget.classList.remove("is-active");
+        activeTarget.setAttribute("aria-expanded", "false");
+        activeTarget = null;
+      }
+      syncHighlightBtn(null);
+      popover.classList.remove("is-open");
+      popover.hidden = true;
+    }
+
+    function openPopover(target) {
+      const raw = target.textContent.trim();
+      const entry = KEYWORDS[raw.toLowerCase()];
+      if (!entry) return;
+
+      if (activeTarget === target && !popover.hidden) {
+        closePopover();
+        return;
+      }
+
+      if (activeTarget) {
+        activeTarget.classList.remove("is-active");
+        activeTarget.setAttribute("aria-expanded", "false");
+      }
+
+      activeTarget = target;
+      activeTarget.classList.add("is-active");
+      activeTarget.setAttribute("aria-expanded", "true");
+      syncHighlightBtn(activeTarget);
+
+      wordEl.textContent = raw;
+      posEl.textContent = entry[0];
+      meaningEl.textContent = entry[1];
+      ipaEl.textContent = entry[2];
+      viEl.textContent = entry[3];
+
+      popover.hidden = false;
+      positionPopover(target);
+      requestAnimationFrame(() => popover.classList.add("is-open"));
+    }
+
+    document.querySelectorAll(".story u").forEach((el, idx) => {
+      const kwId = `${idx}:${el.textContent.trim().toLowerCase()}`;
+      el.dataset.kwId = kwId;
+      if (highlightedIds.has(kwId)) {
+        el.classList.add("is-highlighted");
+      }
+
+      el.setAttribute("tabindex", "0");
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-expanded", "false");
+
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openPopover(el);
+      });
+
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openPopover(el);
+        }
+      });
+    });
+
+    speakBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!activeTarget || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(activeTarget.textContent.trim());
+      utter.lang = "en-US";
+      utter.rate = 0.9;
+      window.speechSynthesis.speak(utter);
+    });
+
+    highlightBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!activeTarget) return;
+      const kwId = activeTarget.dataset.kwId;
+      const willHighlight = !activeTarget.classList.contains("is-highlighted");
+      activeTarget.classList.toggle("is-highlighted", willHighlight);
+      if (kwId) {
+        if (willHighlight) {
+          highlightedIds.add(kwId);
+        } else {
+          highlightedIds.delete(kwId);
+        }
+        saveHighlightedIds(highlightedIds);
+      }
+      syncHighlightBtn(activeTarget);
+    });
+
+    closeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closePopover();
+    });
+
+    popover.addEventListener("click", (e) => e.stopPropagation());
+    document.addEventListener("click", closePopover);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closePopover();
+    });
+    window.addEventListener("resize", () => {
+      if (activeTarget && !popover.hidden) positionPopover(activeTarget);
+    });
+  </script>
+</body>
+</html>

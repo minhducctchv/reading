@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Little Prince — Chapter 2</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --border: #e2e8f0;
+      --text: #334155;
+      --muted: #64748b;
+      --heading: #0f172a;
+      --c-subj: #1d4ed8;
+      --c-verb: #dc2626;
+      --c-obj: #0f766e;
+      --c-mod: #b45309;
+      --c-conn: #7c3aed;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 2.5rem 1.25rem 4rem;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 2.5rem 2.75rem;
+      box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.75rem;
+      color: var(--heading);
+      letter-spacing: -0.02em;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem 1.25rem;
+      padding: 0.9rem 1.15rem;
+      margin-bottom: 2rem;
+      background-color: #f1f5f9;
+      border-radius: 10px;
+      font-size: 0.875rem;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .swatch {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    .swatch-subj { background-color: var(--c-subj); }
+    .swatch-verb { background-color: var(--c-verb); }
+    .swatch-obj { background-color: var(--c-obj); }
+    .swatch-mod { background-color: var(--c-mod); }
+    .swatch-conn { background-color: var(--c-conn); }
+
+    .story p {
+      margin: 0 0 1.5rem;
+      font-size: 1.125rem;
+      line-height: 2.1;
+    }
+
+    .story p:last-child {
+      margin-bottom: 0;
+    }
+
+    .subj { color: var(--c-subj); font-weight: 500; }
+    .verb { color: var(--c-verb); font-weight: 500; }
+    .obj  { color: var(--c-obj); }
+    .mod  { color: var(--c-mod); }
+    .conn { color: var(--c-conn); font-weight: 500; }
+
+    .sep {
+      white-space: pre-wrap;
+    }
+
+    u {
+      text-decoration: underline;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .story u {
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 1px 2px;
+      margin: 0 -2px;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+      transition: background-color 0.15s ease;
+    }
+
+    .story u:hover,
+    .story u:focus-visible,
+    .story u.is-active {
+      background-color: rgba(15, 23, 42, 0.08);
+      outline: none;
+    }
+
+    .story u.is-highlighted {
+      background-color: #fef08a;
+    }
+
+    .story u.is-highlighted:hover,
+    .story u.is-highlighted:focus-visible,
+    .story u.is-highlighted.is-active {
+      background-color: #fde047;
+    }
+
+    .story u:focus-visible {
+      box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.45);
+    }
+
+    .popover {
+      position: absolute;
+      z-index: 1000;
+      width: min(360px, calc(100vw - 24px));
+      background-color: #0f172a;
+      color: #f8fafc;
+      border-radius: 10px;
+      padding: 0.85rem 1rem 0.9rem;
+      box-shadow: 0 14px 32px rgba(15, 23, 42, 0.24), 0 2px 6px rgba(15, 23, 42, 0.12);
+      font-size: 0.9375rem;
+      line-height: 1.55;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+    }
+
+    .popover.is-open {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .popover-arrow {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #0f172a;
+      transform: rotate(45deg);
+    }
+
+    .popover[data-placement="bottom"] .popover-arrow {
+      top: -5px;
+    }
+
+    .popover[data-placement="top"] .popover-arrow {
+      bottom: -5px;
+    }
+
+    .popover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.45rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid rgba(248, 250, 252, 0.14);
+    }
+
+    .popover-word {
+      font-weight: 700;
+      font-size: 1rem;
+      color: #fde68a;
+    }
+
+    .popover-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    .popover-btn {
+      border: none;
+      background: transparent;
+      color: #cbd5e1;
+      cursor: pointer;
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+      line-height: 1;
+      padding: 0;
+      transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .popover-btn:hover {
+      background-color: rgba(248, 250, 252, 0.12);
+      color: #ffffff;
+    }
+
+    .popover-highlight.is-active {
+      background-color: rgba(250, 204, 21, 0.22);
+      color: #fde047;
+    }
+
+    .popover-highlight.is-active:hover {
+      background-color: rgba(250, 204, 21, 0.34);
+      color: #fef08a;
+    }
+
+    .popover-lines {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .popover-pos {
+      color: #93c5fd;
+    }
+
+    .popover-meaning {
+      color: #f8fafc;
+    }
+
+    .popover-ipa {
+      color: #a7f3d0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.875rem;
+    }
+
+    .popover-vi {
+      color: #fed7aa;
+      font-weight: 500;
+    }
+
+    @media (max-width: 640px) {
+      main {
+        padding: 1.5rem 1.25rem;
+      }
+
+      .story p {
+        font-size: 1.05rem;
+        line-height: 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>The Little Prince — Chapter 2</h1>
+      <p class="subtitle">Phân tách ý (câu đơn) bằng 5 dấu cách, phân màu thành phần câu &amp; gạch chân từ khóa</p>
+    </header>
+
+    <section class="legend" aria-label="Chú giải màu sắc và ký hiệu">
+      <span class="legend-item"><span class="swatch swatch-subj"></span><span class="subj">Chủ ngữ (Subject)</span></span>
+      <span class="legend-item"><span class="swatch swatch-verb"></span><span class="verb">Động từ (Verb)</span></span>
+      <span class="legend-item"><span class="swatch swatch-obj"></span><span class="obj">Tân ngữ / Bổ ngữ (Object / Complement)</span></span>
+      <span class="legend-item"><span class="swatch swatch-mod"></span><span class="mod">Trạng ngữ / Bổ nghĩa (Modifier)</span></span>
+      <span class="legend-item"><span class="swatch swatch-conn"></span><span class="conn">Từ nối / Liên từ (Connector)</span></span>
+      <span class="legend-item"><code>[5 spaces]</code> Ngăn các ý (câu đơn)</span>
+      <span class="legend-item"><u>keyword</u> Từ khóa chính (nhấn để xem giải nghĩa &amp; phát âm)</span>
+    </section>
+
+    <article class="story">
+      <p>
+        <span class="conn">So</span> <span class="subj">I</span> <span class="verb">lived</span> <span class="mod"><u>all alone</u></span>, <span class="mod">without <u>anyone</u></span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">could</span> <span class="mod">really</span> <span class="verb">talk</span> <span class="mod">to</span>,<span class="sep">     </span><span
+          class="conn">until</span> <span class="subj">I</span> <span class="verb">had to make</span> <span class="obj">a <u>crash landing</u></span> <span class="mod">in the <u>Sahara Desert</u></span> <span class="mod">six years ago</span>.<span class="sep">     </span><span
+          class="subj">Something</span> <span class="mod">in my plane's <u>engine</u></span> <span class="verb">had <u>broken</u></span>.<span class="sep">     </span><span
+          class="conn">Since</span> <span class="subj">I</span> <span class="verb">had</span> <span class="conn"><u>neither</u></span> <span class="obj">a <u>mechanic</u></span> <span class="conn"><u>nor</u></span> <span class="obj"><u>passengers</u></span> <span class="mod">in the plane with me</span>,<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">was preparing to <u>undertake</u></span> <span class="obj">the difficult <u>repair job</u></span> <span class="mod"><u>by myself</u></span>.<span class="sep">     </span><span
+          class="mod">For me</span> <span class="subj">it</span> <span class="verb">was</span> <span class="obj">a <u>matter of life or death</u></span>:<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">had</span> <span class="mod">only</span> <span class="obj"><u>enough</u> <u>drinking water</u></span> <span class="mod">for <u>eight days</u></span>.
+      </p>
+
+      <p>
+        <span class="mod">The <u>first night</u>, then</span>, <span class="subj">I</span> <span class="verb">went to <u>sleep</u></span> <span class="mod">on the <u>sand</u></span> <span class="mod">a <u>thousand miles</u> from any <u>inhabited</u> <u>country</u></span>.<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">was</span> <span class="obj">more <u>isolated</u></span> <span class="conn">than</span> <span class="subj">a man</span> <span class="mod"><u>shipwrecked</u> on a <u>raft</u></span> <span class="mod">in the <u>middle</u> of the <u>ocean</u></span>.<span class="sep">     </span><span
+          class="conn">So</span> <span class="subj">you</span> <span class="verb">can <u>imagine</u></span> <span class="obj">my <u>surprise</u></span><span class="sep">     </span><span
+          class="conn">when</span> <span class="subj">I</span> <span class="verb">was <u>awakened</u></span> <span class="mod">at <u>daybreak</u></span> <span class="mod">by a <u>funny</u> little <u>voice</u></span> <span class="mod">saying</span>,<span class="sep">     </span>"<span
+          class="mod"><u>Please</u></span>... <span class="verb"><u>draw</u></span> <span class="obj">me</span> <span class="obj">a <u>sheep</u></span>..."
+      </p>
+
+      <p>
+        "<span class="conn"><u>What</u></span>?"
+      </p>
+
+      <p>
+        "<span class="verb"><u>Draw</u></span> <span class="obj">me</span> <span class="obj">a <u>sheep</u></span>..."
+      </p>
+
+      <p>
+        <span class="subj">I</span> <span class="verb"><u>leaped up</u></span><span class="sep">     </span><span
+          class="conn">as if</span> <span class="subj">I</span> <span class="verb">had been <u>struck</u></span> <span class="mod">by <u>lightning</u></span>.<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>rubbed</u></span> <span class="obj">my <u>eyes</u></span> <span class="mod"><u>hard</u></span>.<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>stared</u></span>.<span class="sep">     </span><span
+          class="conn">And</span> <span class="subj">I</span> <span class="verb">saw</span> <span class="obj">an <u>extraordinary</u> <u>little fellow</u></span> <span class="mod">staring back at me</span> <span class="mod">very <u>seriously</u></span>.<span class="sep">     </span><span
+          class="mod">Here</span> <span class="verb">is</span> <span class="subj">the best <u>portrait</u></span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>managed</u> to make</span> <span class="mod">of him</span>, <span class="mod"><u>later on</u></span>.
+      </p>
+
+      <p>
+        <span class="conn">But</span> <span class="mod"><u>of course</u></span> <span class="subj">my <u>drawing</u></span> <span class="verb">is</span> <span class="obj">much less <u>attractive</u></span> <span class="conn">than</span> <span class="subj">my <u>model</u></span>.<span class="sep">     </span><span
+          class="subj">This</span> <span class="verb">is</span> <span class="mod"><u>not</u></span> <span class="obj">my <u>fault</u></span>.<span class="sep">     </span><span
+          class="subj">My <u>career</u> as a <u>painter</u></span> <span class="verb">was <u>discouraged</u></span> <span class="mod">at the age of six</span> <span class="mod">by the <u>grown-ups</u></span>,<span class="sep">     </span><span
+          class="conn">and</span> <span class="subj">I</span> <span class="verb">had</span> <span class="mod"><u>never</u></span> <span class="verb"><u>learned</u> to draw</span> <span class="obj">anything</span> <span class="mod"><u>except</u> <u>boa constrictors</u></span>, <span class="mod"><u>outside</u> and <u>inside</u></span>.
+      </p>
+
+      <p>
+        <span class="conn">So</span> <span class="subj">I</span> <span class="verb"><u>stared</u></span> <span class="mod"><u>wide-eyed</u></span> <span class="mod">at this <u>apparition</u></span>.<span class="sep">     </span><span
+          class="verb">Don't <u>forget</u></span><span class="sep">     </span><span
+          class="conn">that</span> <span class="subj">I</span> <span class="verb">was</span> <span class="mod">a thousand miles from any inhabited <u>territory</u></span>.<span class="sep">     </span><span
+          class="conn">Yet</span> <span class="subj">this little fellow</span> <span class="verb"><u>seemed</u> to be</span> <span class="conn"><u>neither</u></span> <span class="obj"><u>lost</u></span> <span class="conn"><u>nor</u></span> <span class="obj">dying of <u>exhaustion</u>, <u>hunger</u>, or <u>thirst</u></span>;<span class="sep">     </span><span
+          class="conn"><u>nor</u></span> <span class="verb">did</span> <span class="subj">he</span> <span class="verb">seem</span> <span class="obj"><u>scared to death</u></span>.<span class="sep">     </span><span
+          class="mod">There</span> <span class="verb">was</span> <span class="subj"><u>nothing</u></span> <span class="mod">in his <u>appearance</u></span><span class="sep">     </span><span
+          class="conn">that</span> <span class="verb"><u>suggested</u></span> <span class="obj">a child</span> <span class="mod">lost in the middle of the <u>desert</u></span> <span class="mod">a thousand miles from any inhabited territory</span>.
+      </p>
+
+      <p>
+        <span class="conn">When</span> <span class="subj">I</span> <span class="mod"><u>finally</u></span> <span class="verb">managed to <u>speak</u></span>,<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>asked</u></span> <span class="obj">him</span>,<span class="sep">     </span>"<span
+          class="conn">But</span>... <span class="conn"><u>what</u></span> <span class="verb">are</span> <span class="subj">you</span> <span class="verb">doing</span> <span class="mod">here</span>?"
+      </p>
+
+      <p>
+        <span class="conn">And then</span> <span class="subj">he</span> <span class="verb"><u>repeated</u></span>, <span class="mod">very <u>slowly</u> and very seriously</span>,<span class="sep">     </span>"<span
+          class="mod"><u>Please</u></span>... <span class="verb"><u>draw</u></span> <span class="obj">me</span> <span class="obj">a <u>sheep</u></span>..."
+      </p>
+
+      <p>
+        <span class="conn">When</span> <span class="subj">you</span> <span class="verb"><u>encounter</u></span> <span class="obj">an <u>overpowering</u> <u>mystery</u></span>,<span class="sep">     </span><span
+          class="subj">you</span> <span class="verb">don't <u>dare</u> <u>disobey</u></span>.<span class="sep">     </span><span
+          class="obj"><u>Absurd</u></span> <span class="conn">as</span> <span class="subj">it</span> <span class="verb">seemed</span>, <span class="mod">a thousand miles from all inhabited <u>regions</u></span> <span class="conn">and</span> <span class="mod"><u>in danger of</u> <u>death</u></span>,<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>took</u></span> <span class="obj">a <u>piece of paper</u> and a <u>pen</u></span> <span class="mod">out of my <u>pocket</u></span>.<span class="sep">     </span><span
+          class="conn">But then</span> <span class="subj">I</span> <span class="verb"><u>remembered</u></span><span class="sep">     </span><span
+          class="conn">that</span> <span class="subj">I</span> <span class="verb">had</span> <span class="mod"><u>mostly</u></span> <span class="verb"><u>studied</u></span> <span class="obj"><u>geography</u>, <u>history</u>, <u>arithmetic</u>, and <u>grammar</u></span>,<span class="sep">     </span><span
+          class="conn">and</span> <span class="subj">I</span> <span class="verb"><u>told</u></span> <span class="obj">the little fellow</span> <span class="mod">(<u>rather</u> <u>crossly</u>)</span><span class="sep">     </span><span
+          class="conn">that</span> <span class="subj">I</span> <span class="verb">didn't <u>know</u></span> <span class="obj">how to draw</span>.
+      </p>
+
+      <p>
+        <span class="subj">He</span> <span class="verb"><u>replied</u></span>,<span class="sep">     </span>"<span
+          class="subj">That</span> <span class="verb">doesn't <u>matter</u></span>.<span class="sep">     </span><span
+          class="verb"><u>Draw</u></span> <span class="obj">me</span> <span class="obj">a <u>sheep</u></span>."
+      </p>
+
+      <p>
+        <span class="conn">Since</span> <span class="subj">I</span> <span class="verb">had</span> <span class="mod"><u>never</u></span> <span class="verb"><u>drawn</u></span> <span class="obj">a <u>sheep</u></span>,<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">made</span> <span class="obj">him</span> <span class="obj">one of the only two <u>drawings</u></span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">knew</span> <span class="obj">how to make</span> <span class="mod">- the one of the <u>boa constrictor</u> from outside</span>.<span class="sep">     </span><span
+          class="conn">And</span> <span class="subj">I</span> <span class="verb">was <u>astounded</u></span> <span class="mod">to hear the little fellow <u>answer</u></span>:
+      </p>
+
+      <p>
+        "<span class="mod">No! No!</span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">don't <u>want</u></span> <span class="obj">an <u>elephant</u></span> <span class="mod">inside a <u>boa constrictor</u></span>.<span class="sep">     </span><span
+          class="subj">A <u>boa constrictor</u></span> <span class="verb">is</span> <span class="obj">very <u>dangerous</u></span>,<span class="sep">     </span><span
+          class="conn">and</span> <span class="subj">an <u>elephant</u></span> <span class="verb">would <u>get in the way</u></span>.<span class="sep">     </span><span
+          class="conn">Where</span> <span class="subj">I</span> <span class="verb"><u>live</u></span>,<span class="sep">     </span><span
+          class="subj"><u>everything</u></span> <span class="verb">is</span> <span class="obj">very <u>small</u></span>.<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>need</u></span> <span class="obj">a <u>sheep</u></span>.<span class="sep">     </span><span
+          class="verb"><u>Draw</u></span> <span class="obj">me</span> <span class="obj">a <u>sheep</u></span>."
+      </p>
+
+      <p>
+        <span class="conn">So then</span> <span class="subj">I</span> <span class="verb">made</span> <span class="obj">a <u>drawing</u></span>.
+      </p>
+
+      <p>
+        <span class="subj">He</span> <span class="verb"><u>looked at</u></span> <span class="obj">it</span> <span class="mod"><u>carefully</u></span>,<span class="sep">     </span><span
+          class="conn">and then</span> <span class="verb"><u>said</u></span>,<span class="sep">     </span>"<span
+          class="mod">No</span>.<span class="sep">     </span><span
+          class="subj">This one</span> <span class="verb">is</span> <span class="mod"><u>already</u></span> <span class="obj"><u>quite</u> <u>sick</u></span>.<span class="sep">     </span><span
+          class="verb">Make</span> <span class="obj"><u>another</u></span>."
+      </p>
+
+      <p>
+        <span class="subj">I</span> <span class="verb">made</span> <span class="obj"><u>another</u> <u>drawing</u></span>.<span class="sep">     </span><span
+          class="subj">My <u>friend</u></span> <span class="verb"><u>gave</u></span> <span class="obj">me</span> <span class="obj">a <u>kind</u>, <u>indulgent</u> <u>smile</u></span>:
+      </p>
+
+      <p>
+        "<span class="subj">You</span> <span class="verb">can <u>see</u></span> <span class="mod"><u>for yourself</u></span>...<span class="sep">     </span><span
+          class="subj">that</span><span class="verb">'s</span> <span class="mod"><u>not</u></span> <span class="obj">a <u>sheep</u></span>,<span class="sep">     </span><span
+          class="subj">it</span><span class="verb">'s</span> <span class="obj">a <u>ram</u></span>.<span class="sep">     </span><span
+          class="subj">It</span> <span class="verb">has</span> <span class="obj"><u>horns</u></span>..."
+      </p>
+
+      <p>
+        <span class="conn">So</span> <span class="subj">I</span> <span class="verb">made</span> <span class="obj">my <u>third</u> <u>drawing</u></span>,<span class="sep">     </span><span
+          class="conn">but</span> <span class="subj">it</span> <span class="verb">was <u>rejected</u></span>, <span class="mod">like the <u>others</u></span>:
+      </p>
+
+      <p>
+        "<span class="subj">This one</span><span class="verb">'s</span> <span class="obj"><u>too old</u></span>.<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>want</u></span> <span class="obj">a <u>sheep</u></span><span class="sep">     </span><span
+          class="conn">that</span> <span class="verb">will <u>live</u></span> <span class="mod">a <u>long time</u></span>."
+      </p>
+
+      <p>
+        <span class="conn">So then</span>, <span class="mod"><u>impatiently</u></span>,<span class="sep">     </span><span
+          class="conn">since</span> <span class="subj">I</span> <span class="verb">was</span> <span class="obj"><u>in a hurry</u></span> <span class="mod">to start <u>work</u> on my <u>engine</u></span>,<span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>scribbled</u></span> <span class="obj">this drawing</span>,<span class="sep">     </span><span
+          class="conn">and</span> <span class="verb"><u>added</u></span>,<span class="sep">     </span>"<span
+          class="subj">This</span> <span class="verb">is</span> <span class="mod"><u>just</u></span> <span class="obj">the <u>crate</u></span>.<span class="sep">     </span><span
+          class="subj">The <u>sheep</u></span> <span class="mod">you want</span> <span class="verb">is</span> <span class="mod"><u>inside</u></span>."
+      </p>
+
+      <p>
+        <span class="conn">But</span> <span class="subj">I</span> <span class="verb">was <u>amazed</u></span> <span class="mod">to see my young <u>critic</u>'s <u>face</u> <u>light up</u></span>.
+      </p>
+
+      <p>
+        "<span class="subj">That</span><span class="verb">'s</span> <span class="mod">just</span> <span class="obj"><u>the kind</u></span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb">wanted</span>!<span class="sep">     </span><span
+          class="verb">Do</span> <span class="subj">you</span> <span class="verb">think</span><span class="sep">     </span><span
+          class="subj">this sheep</span> <span class="verb">will <u>need</u></span> <span class="obj">a lot of <u>grass</u></span>?"
+      </p>
+
+      <p>
+        "<span class="conn"><u>Why</u></span>?"
+      </p>
+
+      <p>
+        "<span class="conn"><u>Because</u></span> <span class="conn">where</span> <span class="subj">I</span> <span class="verb">live</span>,<span class="sep">     </span><span
+          class="subj">everything</span> <span class="verb">is</span> <span class="obj">very small</span>..."
+      </p>
+
+      <p>
+        "<span class="mod">There</span><span class="verb">'s</span> <span class="obj"><u>sure</u> to be <u>enough</u></span>.<span class="sep">     </span><span
+          class="subj">I</span><span class="verb">'ve <u>given</u></span> <span class="obj">you</span> <span class="obj">a very small <u>sheep</u></span>."
+      </p>
+
+      <p>
+        <span class="subj">He</span> <span class="verb"><u>bent over</u></span> <span class="obj">the drawing</span>.<span class="sep">     </span>"<span
+          class="mod"><u>Not so small as all that</u></span>...<span class="sep">     </span><span
+          class="verb"><u>Look</u></span>!<span class="sep">     </span><span
+          class="subj">He</span><span class="verb">'s <u>gone to sleep</u></span>..."
+      </p>
+
+      <p>
+        <span class="conn">And</span> <span class="subj">that</span><span class="verb">'s</span> <span class="conn"><u>how</u></span><span class="sep">     </span><span
+          class="subj">I</span> <span class="verb"><u>made the acquaintance</u></span> <span class="mod">of the <u>little prince</u></span>.
+      </p>
+    </article>
+  </main>
+
+  <div id="kw-popover" class="popover" role="dialog" aria-live="polite" hidden>
+    <div class="popover-arrow" aria-hidden="true"></div>
+    <div class="popover-header">
+      <span class="popover-word"></span>
+      <span class="popover-actions">
+        <button type="button" class="popover-btn popover-speak" title="Nghe phát âm" aria-label="Nghe phát âm">🔊</button>
+        <button type="button" class="popover-btn popover-highlight" title="Highlight từ khóa" aria-label="Highlight từ khóa" aria-pressed="false">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="m9 11-6 6v3h9l3-3"/>
+            <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/>
+          </svg>
+        </button>
+        <button type="button" class="popover-btn popover-close" title="Đóng (Esc)" aria-label="Đóng">×</button>
+      </span>
+    </div>
+    <ul class="popover-lines">
+      <li>- (<span class="popover-pos"></span>): <span class="popover-meaning"></span></li>
+      <li>- <span class="popover-ipa"></span> - <span class="popover-vi"></span></li>
+    </ul>
+  </div>
+
+  <script>
+    const KEYWORDS = {
+      "all alone": ["cụm trạng từ / tính từ", "hoàn toàn một mình, cô độc", "/ˌɔːl əˈləʊn/", "ol ơ-LÔN"],
+      "anyone": ["đại từ", "bất kỳ ai", "/ˈen.i.wʌn/", "E-ni-oăn"],
+      "crash landing": ["cụm danh từ", "cú hạ cánh khẩn cấp (rơi máy bay)", "/ˈkræʃ ˌlæn.dɪŋ/", "KRÉSH LEN-đing"],
+      "sahara desert": ["danh từ riêng", "sa mạc Sahara", "/səˈhɑː.rə ˈdez.ət/", "xơ-HA-rơ ĐE-zợt"],
+      "engine": ["danh từ", "động cơ, máy móc", "/ˈen.dʒɪn/", "EN-gin"],
+      "broken": ["động từ (quá khứ phân từ của break)", "bị hỏng, bị gãy", "/ˈbrəʊ.kən/", "BRÂU-kừn"],
+      "neither": ["liên từ / từ hạn định", "không (cả hai đều không)", "/ˈnaɪ.ðər/", "NAI-đờ"],
+      "mechanic": ["danh từ", "thợ máy, thợ cơ khí", "/məˈkæn.ɪk/", "mơ-KE-nịch"],
+      "nor": ["liên từ", "cũng không", "/nɔːr/", "NO"],
+      "passengers": ["danh từ số nhiều", "hành khách", "/ˈpæs.ən.dʒəz/", "PE-xừn-giờz"],
+      "undertake": ["động từ", "đảm nhận, bắt tay làm (việc khó)", "/ˌʌn.dəˈteɪk/", "ăn-đờ-TÂYK"],
+      "repair job": ["cụm danh từ", "công việc sửa chữa", "/rɪˈpeər dʒɒb/", "ri-PE GIÓP"],
+      "by myself": ["cụm giới từ / đại từ", "tự mình, một mình", "/baɪ maɪˈself/", "bai mai-XEO"],
+      "matter of life or death": ["cụm danh từ / thành ngữ", "vấn đề sống còn", "/ˈmæt.ər əv laɪf ɔːr deθ/", "ME-tờ ơv LAIPH o ĐÉTH"],
+      "enough": ["từ hạn định / đại từ", "đủ", "/ɪˈnʌf/", "i-NẮPH"],
+      "drinking water": ["cụm danh từ", "nước uống", "/ˈdrɪŋ.kɪŋ ˈwɔː.tər/", "ĐRING-king OÓ-tờ"],
+      "eight days": ["cụm danh từ", "tám ngày", "/eɪt deɪz/", "ÂYT ĐÂYZ"],
+      "first night": ["cụm danh từ", "đêm đầu tiên", "/fɜːst naɪt/", "PHỚT NAIT"],
+      "sleep": ["danh từ / động từ", "giấc ngủ (go to sleep: đi ngủ)", "/sliːp/", "XLÍP"],
+      "sand": ["danh từ", "cát", "/sænd/", "XEN"],
+      "thousand miles": ["cụm danh từ", "một nghìn dặm", "/ˈθaʊ.zənd maɪlz/", "THAO-zừn MAILZ"],
+      "inhabited": ["tính từ", "có người sinh sống, có cư dân", "/ɪnˈhæb.ɪ.tɪd/", "in-HE-bi-tịt"],
+      "country": ["danh từ", "vùng đất, đất nước, miền quê", "/ˈkʌn.tri/", "KĂN-tri"],
+      "isolated": ["tính từ", "cô lập, tách biệt, trơ trọi", "/ˈaɪ.sə.leɪ.tɪd/", "AI-xơ-lây-tịt"],
+      "shipwrecked": ["tính từ / quá khứ phân từ", "bị đắm tàu", "/ˈʃɪp.rekt/", "SHÍP-rẹct"],
+      "raft": ["danh từ", "chiếc bè", "/rɑːft/", "RÁFT"],
+      "middle": ["danh từ", "ở giữa, trung tâm", "/ˈmɪd.əl/", "MI-đồ"],
+      "ocean": ["danh từ", "đại dương", "/ˈəʊ.ʃən/", "ÂU-shừn"],
+      "imagine": ["động từ", "tưởng tượng", "/ɪˈmædʒ.ɪn/", "i-ME-gin"],
+      "surprise": ["danh từ", "sự ngạc nhiên", "/səˈpraɪz/", "xơ-PRAIZ"],
+      "awakened": ["động từ (quá khứ phân từ của awaken)", "bị đánh thức", "/əˈweɪ.kənd/", "ơ-UÂY-kừnd"],
+      "daybreak": ["danh từ", "lúc rạng đông, bình minh", "/ˈdeɪ.breɪk/", "ĐÂY-brâyk"],
+      "funny": ["tính từ", "ngộ nghĩnh, kỳ lạ, buồn cười", "/ˈfʌn.i/", "PHĂN-ni"],
+      "voice": ["danh từ", "giọng nói", "/vɔɪs/", "VOIX"],
+      "please": ["thán từ / phó từ", "xin hãy, làm ơn", "/pliːz/", "PLÍZ"],
+      "draw": ["động từ", "vẽ", "/drɔː/", "ĐRO"],
+      "sheep": ["danh từ", "con cừu", "/ʃiːp/", "SHÍP"],
+      "what": ["đại từ nghi vấn", "cái gì, sao cơ", "/wɒt/", "OÁT"],
+      "leaped up": ["cụm động từ (quá khứ của leap up)", "nhảy bật dậy", "/liːpt ʌp/", "LÍPT ẮP"],
+      "struck": ["động từ (quá khứ phân từ của strike)", "bị đánh trúng, (sét) đánh", "/strʌk/", "XTRẮC"],
+      "lightning": ["danh từ", "tia chớp, sét", "/ˈlaɪt.nɪŋ/", "LAIT-ning"],
+      "rubbed": ["động từ (quá khứ của rub)", "dụi, chà xát", "/rʌbd/", "RẮBD"],
+      "eyes": ["danh từ số nhiều", "đôi mắt", "/aɪz/", "AIZ"],
+      "hard": ["trạng từ", "mạnh, kỹ", "/hɑːd/", "HÁD"],
+      "stared": ["động từ (quá khứ của stare)", "nhìn chằm chằm", "/steəd/", "XTED"],
+      "extraordinary": ["tính từ", "phi thường, kỳ lạ, khác thường", "/ɪkˈstrɔː.dən.ər.i/", "ịch-XTRO-đờ-nơ-ri"],
+      "little fellow": ["cụm danh từ", "cậu bé nhỏ, anh chàng tí hon", "/ˈlɪt.əl ˈfel.əʊ/", "LI-tồ PHE-lâu"],
+      "seriously": ["trạng từ", "một cách nghiêm túc, trang trọng", "/ˈsɪə.ri.əs.li/", "XIA-ri-ợt-xli"],
+      "portrait": ["danh từ", "bức chân dung", "/ˈpɔː.trət/", "PO-trợt"],
+      "managed": ["động từ (quá khứ của manage)", "xoay xở, làm được", "/ˈmæn.ɪdʒd/", "ME-nịcht"],
+      "later on": ["cụm trạng từ", "về sau, sau này", "/ˌleɪ.tər ˈɒn/", "LÂY-tờ ON"],
+      "of course": ["cụm trạng từ", "dĩ nhiên, tất nhiên rồi", "/əv kɔːs/", "ơv KÓX"],
+      "drawing": ["danh từ", "bức vẽ, bản vẽ", "/ˈdrɔː.ɪŋ/", "ĐRO-ing"],
+      "attractive": ["tính từ", "hấp dẫn, thu hút, đẹp mắt", "/əˈtræk.tɪv/", "ơ-TRÉC-tiv"],
+      "model": ["danh từ", "người mẫu, hình mẫu", "/ˈmɒd.əl/", "MO-đồ"],
+      "not": ["trạng từ", "không", "/nɒt/", "NÓT"],
+      "fault": ["danh từ", "lỗi", "/fɔːlt/", "PHÓLT"],
+      "career": ["danh từ", "sự nghiệp", "/kəˈrɪər/", "kơ-RIA"],
+      "painter": ["danh từ", "họa sĩ", "/ˈpeɪn.tər/", "PÊN-tờ"],
+      "discouraged": ["động từ (quá khứ phân từ)", "làm nản lòng, ngăn cản", "/dɪsˈkʌr.ɪdʒd/", "đit-KƠ-rịcht"],
+      "grown-ups": ["danh từ số nhiều", "người lớn", "/ˈɡrəʊn.ʌps/", "GRÔN-ắp"],
+      "never": ["trạng từ", "không bao giờ", "/ˈnev.ər/", "NE-vờ"],
+      "learned": ["động từ (quá khứ phân từ của learn)", "đã học", "/lɜːnd/", "LƠND"],
+      "except": ["giới từ", "ngoại trừ, trừ ra", "/ɪkˈsept/", "ịch-XÉPT"],
+      "boa constrictors": ["danh từ số nhiều", "những con trăn Nam Mỹ", "/ˈbəʊ.ə kənˈstrɪk.təz/", "BÂU-ờ kơn-XTRÍC-tờz"],
+      "outside": ["trạng từ / danh từ", "bên ngoài", "/ˌaʊtˈsaɪd/", "aot-XAID"],
+      "inside": ["trạng từ / danh từ", "bên trong", "/ˌɪnˈsaɪd/", "in-XAID"],
+      "wide-eyed": ["tính từ / trạng từ", "mở to mắt (kinh ngạc)", "/ˌwaɪdˈaɪd/", "oaid-AID"],
+      "apparition": ["danh từ", "bóng hình kỳ ảo, sự hiện ra kỳ lạ", "/ˌæp.əˈrɪʃ.ən/", "e-pơ-RI-shừn"],
+      "forget": ["động từ", "quên", "/fəˈɡet/", "phơ-GHÉT"],
+      "territory": ["danh từ", "vùng đất, lãnh thổ", "/ˈter.ɪ.tər.i/", "TE-ri-tơ-ri"],
+      "seemed": ["động từ (quá khứ của seem)", "có vẻ, dường như", "/siːmd/", "XÍMD"],
+      "lost": ["tính từ", "bị lạc đường", "/lɒst/", "LÓT"],
+      "exhaustion": ["danh từ", "sự kiệt sức", "/ɪɡˈzɔːs.tʃən/", "ig-ZÓT-chừn"],
+      "hunger": ["danh từ", "cơn đói, sự đói", "/ˈhʌŋ.ɡər/", "HĂNG-gờ"],
+      "thirst": ["danh từ", "cơn khát", "/θɜːst/", "THỚT"],
+      "scared to death": ["thành ngữ / cụm tính từ", "sợ chết khiếp", "/skeəd tuː deθ/", "XKED tu ĐÉTH"],
+      "nothing": ["đại từ", "không có gì", "/ˈnʌθ.ɪŋ/", "NĂ-thing"],
+      "appearance": ["danh từ", "vẻ bề ngoài, diện mạo", "/əˈpɪə.rəns/", "ơ-PIA-rừnx"],
+      "suggested": ["động từ (quá khứ của suggest)", "gợi lên, cho thấy", "/səˈdʒes.tɪd/", "xợ-GIÉT-tịt"],
+      "desert": ["danh từ", "sa mạc", "/ˈdez.ət/", "ĐE-zợt"],
+      "finally": ["trạng từ", "cuối cùng", "/ˈfaɪ.nəl.i/", "PHAI-nơ-li"],
+      "speak": ["động từ", "nói, cất tiếng", "/spiːk/", "XPÍK"],
+      "asked": ["động từ (quá khứ của ask)", "hỏi", "/ɑːskt/", "ÁTXT"],
+      "repeated": ["động từ (quá khứ của repeat)", "lặp lại, nhắc lại", "/rɪˈpiː.tɪd/", "ri-PI-tịt"],
+      "slowly": ["trạng từ", "một cách chậm rãi", "/ˈsləʊ.li/", "XLÂU-li"],
+      "encounter": ["động từ", "bắt gặp, chạm trán", "/ɪnˈkaʊn.tər/", "in-KAO-tờ"],
+      "overpowering": ["tính từ", "choáng ngợp, không thể cưỡng lại", "/ˌəʊ.vəˈpaʊə.rɪŋ/", "âu-vơ-PAO-ơ-ring"],
+      "mystery": ["danh từ", "điều bí ẩn", "/ˈmɪs.tər.i/", "MÍT-xtơ-ri"],
+      "dare": ["động từ", "dám", "/deər/", "ĐE"],
+      "disobey": ["động từ", "không vâng lời, làm trái", "/ˌdɪs.əˈbeɪ/", "đit-xơ-BÂY"],
+      "absurd": ["tính từ", "vô lý, phi lý", "/əbˈsɜːd/", "ợp-XỚD"],
+      "regions": ["danh từ số nhiều", "những vùng, khu vực", "/ˈriː.dʒənz/", "RI-giừnz"],
+      "in danger of": ["cụm giới từ", "có nguy cơ, gặp nguy hiểm về", "/ɪn ˈdeɪn.dʒər əv/", "in ĐÊN-giờ ơv"],
+      "death": ["danh từ", "cái chết", "/deθ/", "ĐÉTH"],
+      "took": ["động từ (quá khứ của take)", "lấy, rút ra", "/tʊk/", "TÚC"],
+      "piece of paper": ["cụm danh từ", "tờ giấy, mẩu giấy", "/piːs əv ˈpeɪ.pər/", "PÍX ơv PÂY-pờ"],
+      "pen": ["danh từ", "cây bút", "/pen/", "PEN"],
+      "pocket": ["danh từ", "túi áo, túi quần", "/ˈpɒk.ɪt/", "PO-kịt"],
+      "remembered": ["động từ (quá khứ của remember)", "nhớ ra", "/rɪˈmem.bəd/", "ri-MEM-bợt"],
+      "mostly": ["trạng từ", "phần lớn, chủ yếu", "/ˈməʊst.li/", "MÂUX-li"],
+      "studied": ["động từ (quá khứ phân từ của study)", "đã học, nghiên cứu", "/ˈstʌd.id/", "XTĂ-địt"],
+      "geography": ["danh từ", "môn địa lý", "/dʒiˈɒɡ.rə.fi/", "gi-Ó-grơ-phi"],
+      "history": ["danh từ", "môn lịch sử", "/ˈhɪs.tər.i/", "HÍT-xtơ-ri"],
+      "arithmetic": ["danh từ", "môn số học (toán tính)", "/əˈrɪθ.mə.tɪk/", "ơ-RÍT-mơ-tịch"],
+      "grammar": ["danh từ", "môn ngữ pháp", "/ˈɡræm.ər/", "GREM-mờ"],
+      "told": ["động từ (quá khứ của tell)", "nói với, bảo", "/təʊld/", "TÂULD"],
+      "rather": ["trạng từ", "khá là, hơi", "/ˈrɑː.ðər/", "RA-đờ"],
+      "crossly": ["trạng từ", "một cách cáu kỉnh, bực bội", "/ˈkrɒs.li/", "KRÓX-li"],
+      "know": ["động từ", "biết", "/nəʊ/", "NÂU"],
+      "replied": ["động từ (quá khứ của reply)", "đáp lại, trả lời", "/rɪˈplaɪd/", "ri-PLAID"],
+      "matter": ["động từ", "quan trọng, thành vấn đề", "/ˈmæt.ər/", "ME-tờ"],
+      "drawn": ["động từ (quá khứ phân từ của draw)", "đã vẽ", "/drɔːn/", "ĐRON"],
+      "drawings": ["danh từ số nhiều", "những bức vẽ", "/ˈdrɔː.ɪŋz/", "ĐRO-ingz"],
+      "boa constrictor": ["danh từ", "con trăn Nam Mỹ (loài trăn siết mồi)", "/ˈbəʊ.ə kənˈstrɪk.tər/", "BÂU-ờ kơn-XTRÍC-tờ"],
+      "astounded": ["tính từ / quá khứ phân từ", "kinh ngạc, sửng sốt", "/əˈstaʊn.dɪd/", "ơ-XTAO-địt"],
+      "answer": ["động từ", "trả lời, đáp lại", "/ˈɑːn.sər/", "AN-xờ"],
+      "want": ["động từ", "muốn", "/wɒnt/", "OÁNT"],
+      "elephant": ["danh từ", "con voi", "/ˈel.ɪ.fənt/", "E-li-phừnt"],
+      "dangerous": ["tính từ", "nguy hiểm", "/ˈdeɪn.dʒər.əs/", "ĐÊN-giơ-rợt"],
+      "get in the way": ["thành ngữ / cụm động từ", "cản đường, gây vướng víu", "/ɡet ɪn ðə weɪ/", "GHÉT in đờ UÂY"],
+      "live": ["động từ", "sống", "/lɪv/", "LÍV"],
+      "everything": ["đại từ", "mọi thứ", "/ˈev.ri.θɪŋ/", "EV-ri-thing"],
+      "small": ["tính từ", "nhỏ, bé", "/smɔːl/", "XMÓL"],
+      "need": ["động từ", "cần", "/niːd/", "NÍT"],
+      "looked at": ["cụm động từ (quá khứ của look at)", "nhìn vào, ngắm nghía", "/lʊkt æt/", "LÚCT ẹt"],
+      "carefully": ["trạng từ", "một cách cẩn thận, kỹ lưỡng", "/ˈkeə.fəl.i/", "KE-phồ-li"],
+      "said": ["động từ (quá khứ của say)", "nói", "/sed/", "XÉT"],
+      "already": ["trạng từ", "đã, rồi", "/ɔːlˈred.i/", "ol-RE-đi"],
+      "quite": ["trạng từ", "khá, hoàn toàn", "/kwaɪt/", "KUAIT"],
+      "sick": ["tính từ", "ốm yếu, bệnh tật", "/sɪk/", "XÍK"],
+      "another": ["đại từ / từ hạn định", "một cái khác, con khác", "/əˈnʌð.ər/", "ơ-NĂ-đờ"],
+      "friend": ["danh từ", "người bạn", "/frend/", "PHREND"],
+      "gave": ["động từ (quá khứ của give)", "trao, dành cho", "/ɡeɪv/", "GÂYV"],
+      "kind": ["tính từ", "hiền hậu, tử tế", "/kaɪnd/", "KAIND"],
+      "indulgent": ["tính từ", "bao dung, độ lượng", "/ɪnˈdʌl.dʒənt/", "in-ĐĂN-giừnt"],
+      "smile": ["danh từ", "nụ cười", "/smaɪl/", "XMAIL"],
+      "see": ["động từ", "nhìn thấy, tự thấy", "/siː/", "XI"],
+      "for yourself": ["cụm giới từ", "tự mình (thấy, kiểm chứng)", "/fɔː jɔːˈself/", "phơ yo-XÉO"],
+      "ram": ["danh từ", "con cừu đực", "/ræm/", "REM"],
+      "horns": ["danh từ số nhiều", "sừng", "/hɔːnz/", "HONZ"],
+      "third": ["số thứ tự / tính từ", "thứ ba", "/θɜːd/", "THỚT"],
+      "rejected": ["động từ (quá khứ phân từ)", "bị từ chối, bác bỏ", "/rɪˈdʒek.tɪd/", "ri-GIẾC-tịt"],
+      "others": ["đại từ", "những cái khác", "/ˈʌð.əz/", "Ă-đờz"],
+      "too old": ["cụm tính từ", "quá già", "/tuː əʊld/", "TU ÂULD"],
+      "long time": ["cụm danh từ", "thời gian dài, lâu", "/lɒŋ taɪm/", "LONG TAIM"],
+      "impatiently": ["trạng từ", "một cách mất kiên nhẫn, sốt ruột", "/ɪmˈpeɪ.ʃənt.li/", "im-PÂY-shừnt-li"],
+      "in a hurry": ["cụm giới từ / thành ngữ", "đang vội vã", "/ɪn ə ˈhʌr.i/", "in ơ HƠ-ri"],
+      "work": ["danh từ", "công việc", "/wɜːk/", "UỚK"],
+      "scribbled": ["động từ (quá khứ của scribble)", "vẽ nguệch ngoạc, viết vội", "/ˈskrɪb.əld/", "XKRÍP-bồd"],
+      "added": ["động từ (quá khứ của add)", "nói thêm", "/ˈæd.ɪd/", "E-địt"],
+      "just": ["trạng từ", "chỉ là", "/dʒʌst/", "GIẤT"],
+      "crate": ["danh từ", "cái thùng gỗ, hòm gỗ", "/kreɪt/", "KRÂYT"],
+      "amazed": ["tính từ / quá khứ phân từ", "sửng sốt, ngạc nhiên tột độ", "/əˈmeɪzd/", "ơ-MÂYZD"],
+      "critic": ["danh từ", "nhà phê bình, người đánh giá", "/ˈkrɪt.ɪk/", "KRÍ-tịch"],
+      "face": ["danh từ", "khuôn mặt", "/feɪs/", "PHÂYX"],
+      "light up": ["cụm động từ", "bừng sáng lên, rạng rỡ lên", "/laɪt ʌp/", "LAIT ẮP"],
+      "the kind": ["cụm danh từ", "loại, kiểu", "/ðə kaɪnd/", "đờ KAIND"],
+      "grass": ["danh từ", "cỏ", "/ɡrɑːs/", "GRÁX"],
+      "why": ["trạng từ nghi vấn", "tại sao", "/waɪ/", "OAI"],
+      "because": ["liên từ", "bởi vì", "/bɪˈkɒz/", "bi-KÓZ"],
+      "sure": ["tính từ", "chắc chắn", "/ʃʊər/", "SHUA"],
+      "given": ["động từ (quá khứ phân từ của give)", "đã đưa, đã tặng", "/ˈɡɪv.ən/", "GI-vừn"],
+      "bent over": ["cụm động từ (quá khứ của bend over)", "cúi xuống nhìn", "/bent ˈəʊ.vər/", "BENT ÂU-vờ"],
+      "not so small as all that": ["cụm thành ngữ", "không đến nỗi nhỏ như thế đâu", "/nɒt səʊ smɔːl æz ɔːl ðæt/", "NÓT xâu XMÓL ez OL ĐÉT"],
+      "look": ["động từ / thán từ", "nhìn kìa!", "/lʊk/", "LÚK"],
+      "gone to sleep": ["cụm động từ", "đã ngủ thiếp đi rồi", "/ɡɒn tuː sliːp/", "GON tu XLÍP"],
+      "how": ["trạng từ / liên từ", "cách mà, làm thế nào", "/haʊ/", "HAO"],
+      "made the acquaintance": ["cụm động từ (quá khứ)", "làm quen với", "/meɪd ði əˈkweɪn.təns/", "MÂYD đi ơ-KUÊN-từnx"],
+      "little prince": ["cụm danh từ", "hoàng tử bé", "/ˈlɪt.əl prɪns/", "LI-tồ PRINX"]
+    };
+
+    const popover = document.getElementById("kw-popover");
+    const arrowEl = popover.querySelector(".popover-arrow");
+    const wordEl = popover.querySelector(".popover-word");
+    const posEl = popover.querySelector(".popover-pos");
+    const meaningEl = popover.querySelector(".popover-meaning");
+    const ipaEl = popover.querySelector(".popover-ipa");
+    const viEl = popover.querySelector(".popover-vi");
+    const speakBtn = popover.querySelector(".popover-speak");
+    const highlightBtn = popover.querySelector(".popover-highlight");
+    const closeBtn = popover.querySelector(".popover-close");
+
+    const HIGHLIGHT_STORAGE_KEY = "the_little_prince_chapter_2_highlights";
+    let activeTarget = null;
+
+    if (!("speechSynthesis" in window)) {
+      speakBtn.hidden = true;
+    }
+
+    function loadHighlightedIds() {
+      try {
+        const raw = localStorage.getItem(HIGHLIGHT_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return new Set(Array.isArray(parsed) ? parsed : []);
+      } catch (_) {
+        return new Set();
+      }
+    }
+
+    function saveHighlightedIds(ids) {
+      try {
+        localStorage.setItem(HIGHLIGHT_STORAGE_KEY, JSON.stringify([...ids]));
+      } catch (_) {}
+    }
+
+    const highlightedIds = loadHighlightedIds();
+
+    function syncHighlightBtn(target) {
+      const isHighlighted = Boolean(target && target.classList.contains("is-highlighted"));
+      highlightBtn.classList.toggle("is-active", isHighlighted);
+      highlightBtn.setAttribute("aria-pressed", isHighlighted ? "true" : "false");
+      const label = isHighlighted ? "Bỏ highlight" : "Highlight từ khóa";
+      highlightBtn.title = label;
+      highlightBtn.setAttribute("aria-label", label);
+    }
+
+    function positionPopover(target) {
+      const rect = target.getBoundingClientRect();
+      const popRect = popover.getBoundingClientRect();
+      const margin = 12;
+      const gap = 10;
+
+      const fitsBelow = rect.bottom + gap + popRect.height <= window.innerHeight - margin;
+      const placement = fitsBelow ? "bottom" : "top";
+      popover.dataset.placement = placement;
+
+      const targetCenterX = rect.left + rect.width / 2 + window.scrollX;
+      const minLeft = margin + window.scrollX;
+      const maxLeft = window.scrollX + window.innerWidth - popRect.width - margin;
+      const left = Math.max(minLeft, Math.min(targetCenterX - popRect.width / 2, maxLeft));
+
+      const top = placement === "bottom"
+        ? rect.bottom + window.scrollY + gap
+        : rect.top + window.scrollY - popRect.height - gap;
+
+      popover.style.left = `${left}px`;
+      popover.style.top = `${top}px`;
+
+      const arrowLeft = Math.max(14, Math.min(targetCenterX - left - 5, popRect.width - 24));
+      arrowEl.style.left = `${arrowLeft}px`;
+    }
+
+    function closePopover() {
+      if (activeTarget) {
+        activeTarget.classList.remove("is-active");
+        activeTarget.setAttribute("aria-expanded", "false");
+        activeTarget = null;
+      }
+      syncHighlightBtn(null);
+      popover.classList.remove("is-open");
+      popover.hidden = true;
+    }
+
+    function openPopover(target) {
+      const raw = target.textContent.trim();
+      const entry = KEYWORDS[raw.toLowerCase()];
+      if (!entry) return;
+
+      if (activeTarget === target && !popover.hidden) {
+        closePopover();
+        return;
+      }
+
+      if (activeTarget) {
+        activeTarget.classList.remove("is-active");
+        activeTarget.setAttribute("aria-expanded", "false");
+      }
+
+      activeTarget = target;
+      activeTarget.classList.add("is-active");
+      activeTarget.setAttribute("aria-expanded", "true");
+      syncHighlightBtn(activeTarget);
+
+      wordEl.textContent = raw;
+      posEl.textContent = entry[0];
+      meaningEl.textContent = entry[1];
+      ipaEl.textContent = entry[2];
+      viEl.textContent = entry[3];
+
+      popover.hidden = false;
+      positionPopover(target);
+      requestAnimationFrame(() => popover.classList.add("is-open"));
+    }
+
+    document.querySelectorAll(".story u").forEach((el, idx) => {
+      const kwId = `${idx}:${el.textContent.trim().toLowerCase()}`;
+      el.dataset.kwId = kwId;
+      if (highlightedIds.has(kwId)) {
+        el.classList.add("is-highlighted");
+      }
+
+      el.setAttribute("tabindex", "0");
+      el.setAttribute("role", "button");
+      el.setAttribute("aria-expanded", "false");
+
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        openPopover(el);
+      });
+
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openPopover(el);
+        }
+      });
+    });
+
+    speakBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!activeTarget || !("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(activeTarget.textContent.trim());
+      utter.lang = "en-US";
+      utter.rate = 0.9;
+      window.speechSynthesis.speak(utter);
+    });
+
+    highlightBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (!activeTarget) return;
+      const kwId = activeTarget.dataset.kwId;
+      const willHighlight = !activeTarget.classList.contains("is-highlighted");
+      activeTarget.classList.toggle("is-highlighted", willHighlight);
+      if (kwId) {
+        if (willHighlight) {
+          highlightedIds.add(kwId);
+        } else {
+          highlightedIds.delete(kwId);
+        }
+        saveHighlightedIds(highlightedIds);
+      }
+      syncHighlightBtn(activeTarget);
+    });
+
+    closeBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closePopover();
+    });
+
+    popover.addEventListener("click", (e) => e.stopPropagation());
+    document.addEventListener("click", closePopover);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closePopover();
+    });
+    window.addEventListener("resize", () => {
+      if (activeTarget && !popover.hidden) positionPopover(activeTarget);
+    });
+  </script>
+</body>
+</html>
